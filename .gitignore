@@ -1,0 +1,16 @@
+**__pycache__**
+**build**
+**egg-info**
+**dist**
+data/
+output/
+*.pyc
+venv/
+*.idea/
+*.so
+*.sh 
+*.pth
+*.pkl
+*.zip
+*.bin
+*.out
