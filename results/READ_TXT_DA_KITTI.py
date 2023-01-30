@@ -7,7 +7,7 @@ import pygsheets
 
 def write_df2_gsheet(df: pd.DataFrame, important: dict, service_file_path: str):
     google_client = pygsheets.authorize(service_file=service_file_path)
-    spreadsheet = google_client.open('DA')
+    spreadsheet = google_client.open('SOURCE_ONLY_WAYMO')
     spreadsheet.add_worksheet(title=important["extra_tag"], index=0)
     wks = spreadsheet.worksheet_by_title(important["extra_tag"])
 
@@ -36,23 +36,23 @@ def get_epochs_content(list_epochs: dict, lines: list) -> dict:
     return epochs_content
 
 
+# "Pedestrian AP@0.50, 0.50, 0.50 (3D)": epochs_content[epoch][31],
+# "Pedestrian AP@0.50, 0.50, 0.50 (BEV)": epochs_content[epoch][30],
+# "Pedestrian AP_R40@0.50, 0.50, 0.50 (3D)": epochs_content[epoch][36],
+# "Pedestrian AP_R40@0.50, 0.50, 0.50 (BEV)": epochs_content[epoch][35],
+#
+# "Cyclist AP@0.50, 0.50, 0.50 (3D)": epochs_content[epoch][51],
+# "Cyclist AP@0.50, 0.50, 0.50 (BEV)": epochs_content[epoch][50],
+# "Cyclist AP_R40@0.50, 0.50, 0.50 (BEV)": epochs_content[epoch][55]
+# "Cyclist AP_R40@0.50, 0.50, 0.50 (3D)": epochs_content[epoch][56],
+
 def get_metrics(epochs_content: dict) -> dict:
     epochs_metrics = {}
     for epoch, content in epochs_content.items():
         metrics = {"Car AP@0.70, 0.70, 0.70 (3D)": epochs_content[epoch][11],
                    "Car AP@0.70, 0.70, 0.70 (BEV)": epochs_content[epoch][10],
                    "Car AP_R40@0.70, 0.70, 0.70 (3D)": epochs_content[epoch][16],
-                   "Car AP_R40@0.70, 0.70, 0.70 (BEV)": epochs_content[epoch][15],
-
-                   "Pedestrian AP@0.50, 0.50, 0.50 (3D)": epochs_content[epoch][31],
-                   "Pedestrian AP@0.50, 0.50, 0.50 (BEV)": epochs_content[epoch][30],
-                   "Pedestrian AP_R40@0.50, 0.50, 0.50 (3D)": epochs_content[epoch][36],
-                   "Pedestrian AP_R40@0.50, 0.50, 0.50 (BEV)": epochs_content[epoch][35],
-
-                   "Cyclist AP@0.50, 0.50, 0.50 (3D)": epochs_content[epoch][51],
-                   "Cyclist AP@0.50, 0.50, 0.50 (BEV)": epochs_content[epoch][50],
-                   "Cyclist AP_R40@0.50, 0.50, 0.50 (3D)": epochs_content[epoch][56],
-                   "Cyclist AP_R40@0.50, 0.50, 0.50 (BEV)": epochs_content[epoch][55]}
+                   "Car AP_R40@0.70, 0.70, 0.70 (BEV)": epochs_content[epoch][15]}
         epochs_metrics[epoch] = metrics
     return epochs_metrics
 
@@ -71,7 +71,7 @@ def main():
     epochs_metrics = get_metrics(epochs_content)
 
     # create a dataframe out of the resultant epochs_metrics
-    df_metrics = pd.DataFrame.from_dict(epochs_metrics)
+    df_metrics = pd.DataFrame.from_dict(epochs_metrics).T
 
     # # split the car ap 0.70, 0.70,0.70 in easy, medium, hard
     # df_metrics["car_easy"] = [float(re.split("[,:]", value)[1]) for value in df_metrics["Car AP@0.70, 0.70, 0.70"]]

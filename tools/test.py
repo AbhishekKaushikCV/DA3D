@@ -37,6 +37,7 @@ def parse_config():
     parser.add_argument('--start_epoch', type=int, default=0, help='')
     parser.add_argument('--eval_tag', type=str, default='default', help='eval tag for this experiment')
     parser.add_argument('--eval_all', action='store_true', default=False, help='whether to evaluate all checkpoints')
+    parser.add_argument('--eval_src', action='store_true', default=False, help='')
     parser.add_argument('--ckpt_dir', type=str, default=None, help='specify a ckpt directory to be evaluated if needed')
     parser.add_argument('--save_to_file', action='store_true', default=False, help='')
 
@@ -185,7 +186,7 @@ def main():
 
     ckpt_dir = args.ckpt_dir if args.ckpt_dir is not None else output_dir / 'ckpt'
 
-    if cfg.get('DATA_CONFIG_TAR', None):
+    if cfg.get('DATA_CONFIG_TAR', None) and not args.eval_src:
         test_set, test_loader, sampler = build_dataloader(
             dataset_cfg=cfg.DATA_CONFIG_TAR,
             class_names=cfg.DATA_CONFIG_TAR.CLASS_NAMES,

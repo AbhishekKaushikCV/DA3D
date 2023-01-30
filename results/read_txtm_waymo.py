@@ -14,7 +14,7 @@ import pygsheets
 
 def write_df2_gsheet(df: pd.DataFrame, important: dict, service_file_path: str):
     google_client = pygsheets.authorize(service_file=service_file_path)
-    spreadsheet = google_client.open('waymo')
+    spreadsheet = google_client.open('SOURCE_ONLY_WAYMO')
     spreadsheet.add_worksheet(title=important["extra_tag"], index=0)
     wks = spreadsheet.worksheet_by_title(important["extra_tag"])
 
