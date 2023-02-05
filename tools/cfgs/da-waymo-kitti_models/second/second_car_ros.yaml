@@ -5,7 +5,7 @@ DATA_CONFIG:
     INFO_WITH_FAKELIDAR: False
 
     DATA_AUGMENTOR:
-        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size', 'random_local_pyramid_aug']
+        DISABLE_AUG_LIST: ['random_object_rotation', 'normalize_object_size', 'gt_sampling', 'random_local_pyramid_aug']
         AUG_CONFIG_LIST:
             - NAME: gt_sampling
 
@@ -91,7 +91,7 @@ MODEL:
         ANCHOR_GENERATOR_CONFIG: [
             {
                 'class_name': 'Vehicle',
-                'anchor_sizes': [[3.8, 1.7, 1.50]],
+                'anchor_sizes': [[4.2, 2.0, 1.6]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,

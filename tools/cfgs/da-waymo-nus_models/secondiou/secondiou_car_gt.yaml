@@ -85,7 +85,7 @@ MODEL:
         ANCHOR_GENERATOR_CONFIG: [
             {
                 'class_name': 'Vehicle',
-                'anchor_sizes': [[4.2, 2.0, 1.55]],
+                'anchor_sizes': [[3.8, 1.7, 1.50]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
