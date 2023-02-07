@@ -6,9 +6,9 @@ data/
 output/
 *.pyc
 venv/
+scripts/
 *.idea/
 *.so
-*.sh 
 *.pth
 *.pkl
 *.zip
