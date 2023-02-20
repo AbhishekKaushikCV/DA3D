@@ -1,6 +1,7 @@
 from functools import partial
 
 import numpy as np
+from skimage import transform
 
 from ...utils import box_utils, common_utils
 
@@ -110,6 +111,16 @@ class DataProcessor(object):
 
         return data_dict
 
+    def transform_points_to_voxels_placeholder(self, data_dict=None, config=None):
+        # just calculate grid size
+        if data_dict is None:
+            grid_size = (self.point_cloud_range[3:6] - self.point_cloud_range[0:3]) / np.array(config.VOXEL_SIZE)
+            self.grid_size = np.round(grid_size).astype(np.int64)
+            self.voxel_size = config.VOXEL_SIZE
+            return partial(self.transform_points_to_voxels_placeholder, config=config)
+        
+        return data_dict
+        
     def transform_points_to_voxels(self, data_dict=None, config=None):
         if data_dict is None:
             grid_size = (self.point_cloud_range[3:6] - self.point_cloud_range[0:3]) / np.array(config.VOXEL_SIZE)
@@ -170,6 +181,25 @@ class DataProcessor(object):
                 choice = np.concatenate((choice, extra_choice), axis=0)
             np.random.shuffle(choice)
         data_dict['points'] = points[choice]
+        return data_dict
+
+    def calculate_grid_size(self, data_dict=None, config=None):
+        if data_dict is None:
+            grid_size = (self.point_cloud_range[3:6] - self.point_cloud_range[0:3]) / np.array(config.VOXEL_SIZE)
+            self.grid_size = np.round(grid_size).astype(np.int64)
+            self.voxel_size = config.VOXEL_SIZE
+            return partial(self.calculate_grid_size, config=config)
+        return data_dict
+
+    def downsample_depth_map(self, data_dict=None, config=None):
+        if data_dict is None:
+            self.depth_downsample_factor = config.DOWNSAMPLE_FACTOR
+            return partial(self.downsample_depth_map, config=config)
+
+        data_dict['depth_maps'] = transform.downscale_local_mean(
+            image=data_dict['depth_maps'],
+            factors=(self.depth_downsample_factor, self.depth_downsample_factor)
+        )
         return data_dict
 
     def forward(self, data_dict):

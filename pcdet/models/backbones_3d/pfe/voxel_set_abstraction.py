@@ -544,7 +544,7 @@ class VoxelSetAbstractionTransFusionv5(nn.Module):
             s, _ = torch.max(batch_dict['batch_cls_preds'][bs_idx], dim=1)
             top, idx = torch.topk(s, self.topks)
             c = batch_dict['batch_box_preds'][bs_idx][idx][:, :3].unsqueeze(dim=0)
-            dist = (pts - c) ** 2
+            dist = (pts - c)**2       
 
             dist, _ = dist.sum(dim=-1).min(dim=1)
             mask = (dist <= self.reduce_radius)
@@ -561,7 +561,7 @@ class VoxelSetAbstractionTransFusionv5(nn.Module):
             s, _ = torch.max(batch_dict['batch_cls_preds'][bs_idx], dim=1)
             top, idx = torch.topk(s, self.topks)
             c = batch_dict['batch_box_preds'][bs_idx][idx][:, :3].unsqueeze(dim=0)
-            dist = (pts - c) ** 2
+            dist = (pts - c)**2       
 
             dist, _ = dist.sum(dim=-1).min(dim=1)
             mask = (dist <= self.reduce_radius)
