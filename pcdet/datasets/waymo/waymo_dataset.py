@@ -103,19 +103,38 @@ class WaymoDataset(DatasetTemplate):
     def get_lidar(self, sequence_name, sample_idx):
 
         if self.dataset_cfg.get('LINE_DOWNSAMPLE', False) and self.training:
-            assert 0 <= self.dataset_cfg.HIGH_RESOLUTION_RATE <= 1 and 0 <= self.dataset_cfg.MID_RESOLUTION_RATE <= 1
-            assert 0 <= self.dataset_cfg.HIGH_RESOLUTION_RATE + self.dataset_cfg.MID_RESOLUTION_RATE <= 1
+            assert 0 <= self.dataset_cfg.HIGH_RESOLUTION_RATE <= 1 and 0 <= self.dataset_cfg.MID_RESOLUTION_RATE <= 1 and 0 <= self.dataset_cfg.LOW_RESOLUTION_RATE <= 1
+            assert 0 <= self.dataset_cfg.HIGH_RESOLUTION_RATE + self.dataset_cfg.MID_RESOLUTION_RATE + self.dataset_cfg.LOW_RESOLUTION_RATE <= 1
             rate_64 = self.dataset_cfg.HIGH_RESOLUTION_RATE
             rate_32 = self.dataset_cfg.HIGH_RESOLUTION_RATE + self.dataset_cfg.MID_RESOLUTION_RATE
+            rate_16 = self.dataset_cfg.LOW_RESOLUTION_RATE + self.dataset_cfg.HIGH_RESOLUTION_RATE + self.dataset_cfg.MID_RESOLUTION_RATE
             i = random.random()
-            
-            if i <= rate_64:
 
+            lidar_count = {}
+            if i <= rate_64:
                 lidar_file = self.root_path / 'modes' / '64' / sequence_name / ('%04d.npy' % sample_idx)
+                if '64' not in lidar_count:
+                    lidar_count['64'] = 1
+                else:
+                    lidar_count['64'] += 1
             elif (i > rate_64) & (i <= rate_32):
                 lidar_file = self.root_path / 'modes' / '32' / sequence_name / ('%04d.npy' % sample_idx)
+                if '32' not in lidar_count:
+                    lidar_count['32'] = 1
+                else:
+                    lidar_count['32'] += 1
+            elif self.dataset_cfg.get('LINES_DOWNSAMPLE', False) and ((i > rate_32) & (i <= rate_16)):
+                lidar_file = self.root_path / 'modes' / '16^' / sequence_name / ('%04d.npy' % sample_idx)
+                if '16^' not in lidar_count:
+                    lidar_count['16^'] = 1
+                else:
+                    lidar_count['16^'] += 1
             else:
                 lidar_file = self.root_path / 'modes' / '16' / sequence_name / ('%04d.npy' % sample_idx)
+                if '16' not in lidar_count:
+                    lidar_count['16'] = 1
+                else:
+                    lidar_count['16'] += 1
         else:
             lidar_file = self.root_path / 'modes' / '64' / sequence_name / ('%04d.npy' % sample_idx)
 		

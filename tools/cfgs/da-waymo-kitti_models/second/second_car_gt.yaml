@@ -1,7 +1,7 @@
 CLASS_NAMES: ['Vehicle']
 
 DATA_CONFIG:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
+    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset_vs.yaml
     INFO_WITH_FAKELIDAR: False
 
     DATA_AUGMENTOR:
@@ -68,7 +68,7 @@ MODEL:
 
     MAP_TO_BEV:
         NAME: HeightCompression
-        NUM_BEV_FEATURES: 256
+        NUM_BEV_FEATURES: 256 # ORIGINAL: 256
 
     BACKBONE_2D:
         NAME: BaseBEVBackbone

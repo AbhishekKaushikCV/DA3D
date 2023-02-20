@@ -4,7 +4,7 @@ DATA_CONFIG:
     _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
     INFO_WITH_FAKELIDAR: False
     LINE_DOWNSAMPLE: True # to use line downsample in training
-    LINES_DOWNSAMPLE: False # TO USE DOWNSAMPLING IN BOTH AXIS, for mode 16^
+    LINES_DOWNSAMPLE: True # TO USE DOWNSAMPLING IN BOTH AXIS, for mode 16^
     HIGH_RESOLUTION_RATE: 0.5 
     MID_RESOLUTION_RATE: 0.2
     LOW_RESOLUTION_RATE: 0.2 # rate for 16^

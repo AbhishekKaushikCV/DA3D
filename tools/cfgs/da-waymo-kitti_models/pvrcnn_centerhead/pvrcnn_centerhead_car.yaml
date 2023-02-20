@@ -39,7 +39,7 @@ MODEL:
         CLASS_AGNOSTIC: False
 
         CLASS_NAMES_EACH_HEAD: [
-            [ 'Vehicle' ]
+            ['Car']               # for testing in target domain change the head name to the respected class in the target domain 'Vehicle' -> 'Car'
         ]
 
         SHARED_CONV_CHANNEL: 64

@@ -6,6 +6,7 @@ from .pv_rcnn import PVRCNN
 from .second_net import SECONDNet
 from .second_net_iou import SECONDNetIoU
 from .votr_tsd_net import VoTrRCNN
+from .centerpoint import CenterPoint
 
 __all__ = {
     'Detector3DTemplate': Detector3DTemplate,
@@ -16,6 +17,7 @@ __all__ = {
     'PointRCNN': PointRCNN,
     'SECONDNetIoU': SECONDNetIoU,
     'VoTrRCNN': VoTrRCNN,
+    'CenterPoint': CenterPoint,
 }
 
 
