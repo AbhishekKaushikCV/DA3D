@@ -2,7 +2,7 @@
 
 # Slurm parameters
 #SBATCH --job-name=trscndva
-#SBATCH --output=train_second_car_va_h02_bev128_%j.%N.out
+#SBATCH --output=train_second_car_va_h025_bev128_%j.%N.out
 #SBATCH --nodes=1
 #SBATCH --ntasks=2
 #SBATCH --ntasks-per-node=2
@@ -108,9 +108,9 @@ CUDA_VISIBLE_DEVICES=0,1
 srun python train.py \
 --launcher slurm \
 --tcp_port $PORT \
---cfg_file cfgs/da-waymo-kitti_models/second/second_car_vh02_bev128.yaml \
+--cfg_file cfgs/da-waymo-kitti_models/second/second_car_vh025_bev128.yaml \
 --batch_size 2 \
---extra_tag train_second_car_va_h02_bev128 \
+--extra_tag train_second_car_va_h025_bev128 \
 --max_ckpt_save_num 5 \
 --num_epochs_to_eval 5 \
 --eval_src

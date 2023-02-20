@@ -58,7 +58,7 @@ DATA_PROCESSOR:
       }
 
     - NAME: transform_points_to_voxels
-      VOXEL_SIZE: [0.1, 0.1, 0.2] # [L, W, H], VOXEL HEIGHTS: [0.15, 0.125, 0.2, 0.25] BEV_FEATURES: [256, 256, 128, 128], (ORIGINAL :0.15)
+      VOXEL_SIZE: [0.1, 0.1, 0.25] # [L, W, H], VOXEL HEIGHTS: [0.15, 0.125, 0.2, 0.25] BEV_FEATURES: [256, 256, 128, 128], (ORIGINAL :0.15)
       MAX_POINTS_PER_VOXEL: 5
       MAX_NUMBER_OF_VOXELS: {
         'train': 80000,
