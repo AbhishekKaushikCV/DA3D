@@ -1,8 +1,8 @@
 #!/bin/bash -l
 
 # Slurm parameters
-#SBATCH --job-name=trscndva
-#SBATCH --output=train_second_car_va_h025_bev128_%j.%N.out
+#SBATCH --job-name=trsciog
+#SBATCH --output=train_secondiou_gt_waymo_%j.%N.out
 #SBATCH --nodes=1
 #SBATCH --ntasks=2
 #SBATCH --ntasks-per-node=2
@@ -61,15 +61,15 @@ CUDA_VISIBLE_DEVICES=0,1
 #--max_ckpt_save_num 5
 
 # train secondiou_car in waymo
-#srun python train.py \
-#--launcher slurm \
-#--tcp_port $PORT \
-#--cfg_file cfgs/da-waymo-kitti_models/centerpoint/centerpoint_car.yaml \
-#--batch_size 2 \
-#--extra_tag train_centerpoint_car_waymo \
-#--max_ckpt_save_num 5 \
-#--num_epochs_to_eval 5 \
-#--eval_src
+srun python train.py \
+--launcher slurm \
+--tcp_port $PORT \
+--cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_gt.yaml \
+--batch_size 2 \
+--extra_tag train_secondiou_gt_waymo \
+--max_ckpt_save_num 5 \
+--num_epochs_to_eval 5 \
+--eval_src
 
 ## train secondiou_cyc in waymo
 #srun python train.py \
@@ -105,15 +105,15 @@ CUDA_VISIBLE_DEVICES=0,1
 #--eval_src
 
 # train second_car in waymo
-srun python train.py \
---launcher slurm \
---tcp_port $PORT \
---cfg_file cfgs/da-waymo-kitti_models/second/second_car_vh025_bev128.yaml \
---batch_size 2 \
---extra_tag train_second_car_va_h025_bev128 \
---max_ckpt_save_num 5 \
---num_epochs_to_eval 5 \
---eval_src
+#srun python train.py \
+#--launcher slurm \
+#--tcp_port $PORT \
+#--cfg_file cfgs/da-waymo-kitti_models/second/second_car_vh025_bev128.yaml \
+#--batch_size 2 \
+#--extra_tag train_second_car_va_h025_bev128 \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
 
 ## secondiou aware in waymo
 #srun python train.py \

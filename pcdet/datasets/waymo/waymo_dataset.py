@@ -26,7 +26,12 @@ class WaymoDataset(DatasetTemplate):
         self.split = self.dataset_cfg.DATA_SPLIT[self.mode]
         split_dir = self.root_path / 'ImageSets' / (self.split + '.txt')
         self.sample_sequence_list = [x.strip() for x in open(split_dir).readlines()]
+        self.load_kirk = self.dataset_cfg.get('LOAD_KIRK', False)
+        if self.load_kirk:
+            kirk_split_dir = self.root_path / 'ImageSets' / ('%s.txt' % self.split)
+            self.sample_kirk_sequence_list = [x.strip() for x in open(kirk_split_dir).readlines()]
 
+        self.infos = []
         self.infos = []
         self.include_waymo_data(self.mode)
 
@@ -67,6 +72,26 @@ class WaymoDataset(DatasetTemplate):
                 sampled_waymo_infos.append(self.infos[k])
             self.infos = sampled_waymo_infos
             self.logger.info('Total sampled samples for Waymo dataset: %d' % len(self.infos))
+
+        if self.load_kirk:
+            kirk_infos = []
+
+            num_skipped_kirk_infos = 0
+            for k in range(len(self.sample_kirk_sequence_list)):
+                sequence_name = os.path.splitext(self.sample_kirk_sequence_list[k])[0]
+                info_path = self.data_path / sequence_name / ('%s.pkl' % sequence_name)
+                info_path = self.check_sequence_name_with_all_version(info_path)
+                if not info_path.exists():
+                    num_skipped_kirk_infos += 1
+                    continue
+                with open(info_path, 'rb') as f:
+                    infos = pickle.load(f)
+                    kirk_infos.extend(infos)
+
+            self.infos.extend(kirk_infos[:])
+            self.logger.info('Total skipped Kirk info %s' % num_skipped_kirk_infos)
+            self.logger.info('Total samples for Kirk dataset: %d' % (len(kirk_infos)))
+            self.logger.info('Total combined samples for Waymo & Kirk dataset: %d' % len(self.infos))
 
     @staticmethod
     def check_sequence_name_with_all_version(sequence_file):
@@ -135,9 +160,13 @@ class WaymoDataset(DatasetTemplate):
                     lidar_count['16'] = 1
                 else:
                     lidar_count['16'] += 1
+        elif self.load_kirk:
+            lidar_file = self.data_path / sequence_name / ('%04d.npy' % sample_idx)
+
         else:
             lidar_file = self.root_path / 'modes' / '64' / sequence_name / ('%04d.npy' % sample_idx)
-		
+
+
 
         point_features = np.load(lidar_file)  # (N, 7): [x, y, z, intensity, elongation, NLZ_flag]
 

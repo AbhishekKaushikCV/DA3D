@@ -56,7 +56,7 @@ DATA_PROCESSOR:
       }
 
     - NAME: transform_points_to_voxels
-      VOXEL_SIZE: [0.1, 0.1, 0.15]
+      VOXEL_SIZE: [0.1, 0.1, 0.15] # original: 0.15, changed to 0.25, 0.2, 0.125
       MAX_POINTS_PER_VOXEL: 5
       MAX_NUMBER_OF_VOXELS: {
         'train': 80000,

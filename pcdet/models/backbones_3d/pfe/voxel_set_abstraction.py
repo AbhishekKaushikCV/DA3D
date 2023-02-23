@@ -4,6 +4,7 @@ import torch.nn as nn
 from ....ops.pointnet2.pointnet2_stack import pointnet2_modules as pointnet2_stack_modules
 from ....ops.pointnet2.pointnet2_stack import pointnet2_utils as pointnet2_stack_utils
 from ....utils import common_utils
+from ...backbones_2d.transformer import TransformerEncoderLayer3D, TransformerEncoder
 
 
 def bilinear_interpolate_torch(im, x, y):
@@ -588,8 +589,10 @@ class VoxelSetAbstractionTransFusionv5(nn.Module):
 
         """
         if self.model_cfg.POINT_SOURCE == 'raw_points' and self.reduce_radius > 0:
-            # batch_dict = self.reduce_points(batch_dict)
+            print("BATCH_DICT:", batch_dict.keys())
+            #batch_dict = self.reduce_points(batch_dict)
             keypoints = self.get_sampled_points(batch_dict)
+
             keypoint_lst = self.reduce_points_post(keypoints, batch_dict)
             keypoints = self.get_sampled_points_post(batch_dict, keypoint_lst)
         else:

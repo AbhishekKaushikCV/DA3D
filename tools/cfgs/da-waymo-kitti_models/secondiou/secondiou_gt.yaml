@@ -1,4 +1,4 @@
-CLASS_NAMES: ['Vehicle']
+CLASS_NAMES: ['Vehicle', 'Pedestrian', 'Cyclist']
 
 DATA_CONFIG:
     _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
@@ -13,11 +13,11 @@ DATA_CONFIG:
               DB_INFO_PATH:
                 - waymo_processed_data_v0_5_0_waymo_dbinfos_train_sampled_1.pkl
               PREPARE: {
-                filter_by_min_points: [ 'Vehicle:5' ],
+                filter_by_min_points: [ 'Vehicle:5', 'Pedestrian:5', 'Cyclist:5' ],
                 filter_by_difficulty: [ -1 ],
               }
 
-              SAMPLE_GROUPS: [ 'Vehicle:15' ]
+              SAMPLE_GROUPS: [ 'Vehicle:15','Pedestrian:15', 'Cyclist:15' ]
               NUM_POINT_FEATURES: 5
               DATABASE_WITH_FAKELIDAR: False
               REMOVE_EXTRA_WIDTH: [ 0.0, 0.0, 0.0 ]
@@ -46,7 +46,7 @@ DATA_CONFIG_TAR:
     _BASE_CONFIG_: cfgs/dataset_configs/da_kitti_dataset.yaml
     TARGET: True
     FOV_POINTS_ONLY: False
-    CLASS_NAMES: ['Car']
+    CLASS_NAMES: ['Car', 'Pedestrian', 'Cyclist']
     SHIFT_COOR: [0.0, 0.0, 1.6]
 
 MODEL:
@@ -83,13 +83,33 @@ MODEL:
         ANCHOR_GENERATOR_CONFIG: [
             {
                 'class_name': 'Vehicle',
-                'anchor_sizes': [[3.9, 1.9, 1.5]], # mean car object size in waymo
+                'anchor_sizes': [[4.2, 2.0, 1.6]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
                 'feature_map_stride': 8,
                 'matched_threshold': 0.55,
                 'unmatched_threshold': 0.4
+            },
+            {
+                'class_name': 'Pedestrian',
+                'anchor_sizes': [[0.91, 0.86, 1.73]],
+                'anchor_rotations': [0, 1.57],
+                'anchor_bottom_heights': [0],
+                'align_center': False,
+                'feature_map_stride': 8,
+                'matched_threshold': 0.5,
+                'unmatched_threshold': 0.35
+            },
+            {
+                'class_name': 'Cyclist',
+                'anchor_sizes': [[1.78, 0.84, 1.78]],
+                'anchor_rotations': [0, 1.57],
+                'anchor_bottom_heights': [0],
+                'align_center': False,
+                'feature_map_stride': 8,
+                'matched_threshold': 0.5,
+                'unmatched_threshold': 0.35
             }
         ]
 

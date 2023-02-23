@@ -1,8 +1,8 @@
 #!/bin/bash -l
 
 # Slurm parameters
-#SBATCH --job-name=kinus
-#SBATCH --output=testnus_pvrcnn_centerhead_car_%j.%N.out
+#SBATCH --job-name=kirk
+#SBATCH --output=test_kirk_%j.%N.out
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=168:00:00
@@ -17,11 +17,17 @@ pyenv activate rp
 
 CUDA_VISIBLE_DEVICES=0
 
-python test.py \
---cfg_file  cfgs/da-waymo-nus_models/pvrcnn_centerhead/pvrcnn_centerhead_car.yaml \
---ckpt_dir /no_backups/s1435/DA3D/output/da-waymo-kitti_models/pvrcnn_centerhead/pvrcnn_centerhead_car/trainpvrcnncenterhead_waymo/ckpt/ \
---extra_tag  testnus_pvrcnn_centerhead_car \
---eval_all \
+#python test.py \
+#--cfg_file  cfgs/da-waymo-nus_models/pvrcnn_centerhead/pvrcnn_centerhead_car.yaml \
+#--ckpt_dir /no_backups/s1435/DA3D/output/da-waymo-kitti_models/pvrcnn_centerhead/pvrcnn_centerhead_car/trainpvrcnncenterhead_waymo/ckpt/ \
+#--extra_tag  testnus_pvrcnn_centerhead_car \
+#--eval_all \
+
+python test.py  \
+--cfg_file cfgs/da-waymo-kirk_models/second/second_car.yaml \
+--ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/second/second_car/train_second_nogt_car_waymo/ckpt/checkpoint_epoch_30.pth \
+--extra_tag test_kirk
+
 
 #python test.py \
 #--cfg_file cfgs/da-waymo-kitti_models/centerpoint/centerpoint_car.yaml \
@@ -29,7 +35,6 @@ python test.py \
 #--extra_tag  testkitti_centerpoint_car \
 #--eval_all \
 #--set DATA_CONFIG_TAR.FOV_POINTS_ONLY True
-
 
 #python test.py \
 #--cfg_file  cfgs/da-waymo-nus_models/pvrcnn_centerhead/pvrcnn_centerhead_car.yaml \

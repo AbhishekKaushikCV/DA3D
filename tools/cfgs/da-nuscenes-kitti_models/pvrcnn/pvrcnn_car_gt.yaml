@@ -1,11 +1,14 @@
-CLASS_NAMES: ['Vehicle']
+CLASS_NAMES: ['car']
 
 DATA_CONFIG:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
-    INFO_WITH_FAKELIDAR: False
+    _BASE_CONFIG_: cfgs/dataset_configs/da_nuscenes_kitti_dataset.yaml
+    MAX_SWEEPS: 1
+    PRED_VELOCITY: False
+    BALANCED_RESAMPLING: False
+    SHIFT_COOR: [0.0, 0.0, 1.8]
 
     DATA_AUGMENTOR:
-        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size']
+        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size', 'random_local_pyramid_aug']
         AUG_CONFIG_LIST:
             - NAME: gt_sampling
 
@@ -13,11 +16,11 @@ DATA_CONFIG:
               DB_INFO_PATH:
                 - waymo_processed_data_v0_5_0_waymo_dbinfos_train_sampled_1.pkl
               PREPARE: {
-                filter_by_min_points: [ 'Vehicle:5' ],
+                filter_by_min_points: [ 'car:5' ],
                 filter_by_difficulty: [ -1 ],
               }
 
-              SAMPLE_GROUPS: [ 'Vehicle:15' ]
+              SAMPLE_GROUPS: [ 'car:15' ]
               NUM_POINT_FEATURES: 5
               DATABASE_WITH_FAKELIDAR: False
               REMOVE_EXTRA_WIDTH: [ 0.0, 0.0, 0.0 ]
@@ -42,6 +45,14 @@ DATA_CONFIG:
             - NAME: random_world_scaling
               WORLD_SCALE_RANGE: [0.95, 1.05]
 
+            - NAME: random_local_pyramid_aug
+              DROP_PROB: 0.25
+              SPARSIFY_PROB: 0.05
+              SPARSIFY_MAX_NUM: 50
+              SWAP_PROB: 0.1
+              SWAP_MAX_NUM: 50
+
+
 DATA_CONFIG_TAR:
     _BASE_CONFIG_: cfgs/dataset_configs/da_kitti_dataset.yaml
     TARGET: True
@@ -50,7 +61,7 @@ DATA_CONFIG_TAR:
     SHIFT_COOR: [0.0, 0.0, 1.6]
 
 MODEL:
-    NAME: SECONDNetIoU
+    NAME: PVRCNN
 
     VFE:
         NAME: MeanVFE
@@ -82,8 +93,8 @@ MODEL:
 
         ANCHOR_GENERATOR_CONFIG: [
             {
-                'class_name': 'Vehicle',
-                'anchor_sizes': [[3.9, 1.9, 1.5]], # mean car object size in waymo
+                'class_name': 'car',
+                'anchor_sizes': [[4.7, 2.1, 1.7]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
@@ -109,12 +120,60 @@ MODEL:
                 'code_weights': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
             }
 
+    PFE:
+        NAME: VoxelSetAbstraction
+        POINT_SOURCE: raw_points
+        NUM_KEYPOINTS: 4096
+        NUM_OUTPUT_FEATURES: 128
+        SAMPLE_METHOD: FPS
+
+        FEATURES_SOURCE: ['bev', 'x_conv3', 'x_conv4', 'raw_points']
+        SA_LAYER:
+            raw_points:
+                MLPS: [[16, 16], [16, 16]]
+                POOL_RADIUS: [0.4, 0.8]
+                NSAMPLE: [16, 16]
+            x_conv1:
+                DOWNSAMPLE_FACTOR: 1
+                MLPS: [[16, 16], [16, 16]]
+                POOL_RADIUS: [0.4, 0.8]
+                NSAMPLE: [16, 16]
+            x_conv2:
+                DOWNSAMPLE_FACTOR: 2
+                MLPS: [[32, 32], [32, 32]]
+                POOL_RADIUS: [0.8, 1.2]
+                NSAMPLE: [16, 32]
+            x_conv3:
+                DOWNSAMPLE_FACTOR: 4
+                MLPS: [[64, 64], [64, 64]]
+                POOL_RADIUS: [1.2, 2.4]
+                NSAMPLE: [16, 32]
+            x_conv4:
+                DOWNSAMPLE_FACTOR: 8
+                MLPS: [[64, 64], [64, 64]]
+                POOL_RADIUS: [2.4, 4.8]
+                NSAMPLE: [16, 32]
+
+    POINT_HEAD:
+        NAME: PointHeadSimple
+        CLS_FC: [256, 256]
+        CLASS_AGNOSTIC: True
+        USE_POINT_FEATURES_BEFORE_FUSION: True
+        TARGET_CONFIG:
+            GT_EXTRA_WIDTH: [0.2, 0.2, 0.2]
+        LOSS_CONFIG:
+            LOSS_REG: smooth-l1
+            LOSS_WEIGHTS: {
+                'point_cls_weight': 1.0,
+            }
+
     ROI_HEAD:
-        NAME: SECONDHead
+        NAME: PVRCNNHead
         CLASS_AGNOSTIC: True
 
         SHARED_FC: [256, 256]
-        IOU_FC: [256, 256]
+        CLS_FC: [256, 256]
+        REG_FC: [256, 256]
         DP_RATIO: 0.3
 
         NMS_CONFIG:
@@ -132,9 +191,11 @@ MODEL:
                 NMS_THRESH: 0.7
 
         ROI_GRID_POOL:
-            GRID_SIZE: 7
-            IN_CHANNEL: 512
-            DOWNSAMPLE_RATIO: 8
+            GRID_SIZE: 6
+            MLPS: [[64, 64], [64, 64]]
+            POOL_RADIUS: [0.8, 1.6]
+            NSAMPLE: [16, 16]
+            POOL_METHOD: max_pool
 
         TARGET_CONFIG:
             BOX_CODER: ResidualCoder
@@ -152,9 +213,13 @@ MODEL:
             REG_FG_THRESH: 0.55
 
         LOSS_CONFIG:
-            IOU_LOSS: BinaryCrossEntropy
+            CLS_LOSS: BinaryCrossEntropy
+            REG_LOSS: smooth-l1
+            CORNER_LOSS_REGULARIZATION: True
             LOSS_WEIGHTS: {
-                'rcnn_iou_weight': 1.0,
+                'rcnn_cls_weight': 1.0,
+                'rcnn_reg_weight': 1.0,
+                'rcnn_corner_weight': 1.0,
                 'code_weights': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
             }
 
@@ -163,22 +228,22 @@ MODEL:
         SCORE_THRESH: 0.1
         OUTPUT_RAW_SCORE: False
 
-        EVAL_METRIC: waymo
+        EVAL_METRIC: kitti
 
         NMS_CONFIG:
             MULTI_CLASSES_NMS: False
             NMS_TYPE: nms_gpu
-            NMS_THRESH: 0.01
+            NMS_THRESH: 0.1
             NMS_PRE_MAXSIZE: 4096
             NMS_POST_MAXSIZE: 500
 
 
 OPTIMIZATION:
-    NUM_EPOCHS: 30
-    BATCH_SIZE_PER_GPU: 4
+    NUM_EPOCHS: 50
+    BATCH_SIZE_PER_GPU: 2
     OPTIMIZER: adam_onecycle
-    LR: 0.003
-    WEIGHT_DECAY: 0.01
+    LR: 0.01
+    WEIGHT_DECAY: 0.001
     MOMENTUM: 0.9
 
     MOMS: [0.95, 0.85]

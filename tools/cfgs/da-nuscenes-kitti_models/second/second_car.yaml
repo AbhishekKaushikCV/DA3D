@@ -1,11 +1,14 @@
-CLASS_NAMES: ['Vehicle']
+CLASS_NAMES: ['car']
 
 DATA_CONFIG:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
-    INFO_WITH_FAKELIDAR: False
+    _BASE_CONFIG_: cfgs/dataset_configs/da_nuscenes_kitti_dataset.yaml
+    MAX_SWEEPS: 1
+    PRED_VELOCITY: False
+    BALANCED_RESAMPLING: False
+    SHIFT_COOR: [0.0, 0.0, 1.8]
 
     DATA_AUGMENTOR:
-        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size']
+        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size', 'gt_sampling', 'random_local_pyramid_aug']
         AUG_CONFIG_LIST:
             - NAME: gt_sampling
 
@@ -13,11 +16,11 @@ DATA_CONFIG:
               DB_INFO_PATH:
                 - waymo_processed_data_v0_5_0_waymo_dbinfos_train_sampled_1.pkl
               PREPARE: {
-                filter_by_min_points: [ 'Vehicle:5' ],
+                filter_by_min_points: [ 'car:5' ],
                 filter_by_difficulty: [ -1 ],
               }
 
-              SAMPLE_GROUPS: [ 'Vehicle:15' ]
+              SAMPLE_GROUPS: [ 'car:15' ]
               NUM_POINT_FEATURES: 5
               DATABASE_WITH_FAKELIDAR: False
               REMOVE_EXTRA_WIDTH: [ 0.0, 0.0, 0.0 ]
@@ -42,6 +45,14 @@ DATA_CONFIG:
             - NAME: random_world_scaling
               WORLD_SCALE_RANGE: [0.95, 1.05]
 
+            - NAME: random_local_pyramid_aug
+              DROP_PROB: 0.25
+              SPARSIFY_PROB: 0.05
+              SPARSIFY_MAX_NUM: 50
+              SWAP_PROB: 0.1
+              SWAP_MAX_NUM: 50
+
+
 DATA_CONFIG_TAR:
     _BASE_CONFIG_: cfgs/dataset_configs/da_kitti_dataset.yaml
     TARGET: True
@@ -50,7 +61,7 @@ DATA_CONFIG_TAR:
     SHIFT_COOR: [0.0, 0.0, 1.6]
 
 MODEL:
-    NAME: SECONDNetIoU
+    NAME: SECONDNet
 
     VFE:
         NAME: MeanVFE
@@ -82,8 +93,8 @@ MODEL:
 
         ANCHOR_GENERATOR_CONFIG: [
             {
-                'class_name': 'Vehicle',
-                'anchor_sizes': [[3.9, 1.9, 1.5]], # mean car object size in waymo
+                'class_name': 'car',
+                'anchor_sizes': [[4.2, 2.0, 1.60]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
@@ -109,61 +120,12 @@ MODEL:
                 'code_weights': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
             }
 
-    ROI_HEAD:
-        NAME: SECONDHead
-        CLASS_AGNOSTIC: True
-
-        SHARED_FC: [256, 256]
-        IOU_FC: [256, 256]
-        DP_RATIO: 0.3
-
-        NMS_CONFIG:
-            TRAIN:
-                NMS_TYPE: nms_gpu
-                MULTI_CLASSES_NMS: False
-                NMS_PRE_MAXSIZE: 9000
-                NMS_POST_MAXSIZE: 512
-                NMS_THRESH: 0.8
-            TEST:
-                NMS_TYPE: nms_gpu
-                MULTI_CLASSES_NMS: False
-                NMS_PRE_MAXSIZE: 1024
-                NMS_POST_MAXSIZE: 100
-                NMS_THRESH: 0.7
-
-        ROI_GRID_POOL:
-            GRID_SIZE: 7
-            IN_CHANNEL: 512
-            DOWNSAMPLE_RATIO: 8
-
-        TARGET_CONFIG:
-            BOX_CODER: ResidualCoder
-            ROI_PER_IMAGE: 128
-            FG_RATIO: 0.5
-
-            SAMPLE_ROI_BY_EACH_CLASS: True
-            CLS_SCORE_TYPE: raw_roi_iou
-
-            CLS_FG_THRESH: 0.75
-            CLS_BG_THRESH: 0.25
-            CLS_BG_THRESH_LO: 0.1
-            HARD_BG_RATIO: 0.8
-
-            REG_FG_THRESH: 0.55
-
-        LOSS_CONFIG:
-            IOU_LOSS: BinaryCrossEntropy
-            LOSS_WEIGHTS: {
-                'rcnn_iou_weight': 1.0,
-                'code_weights': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-            }
-
     POST_PROCESSING:
         RECALL_THRESH_LIST: [0.3, 0.5, 0.7]
         SCORE_THRESH: 0.1
         OUTPUT_RAW_SCORE: False
 
-        EVAL_METRIC: waymo
+        EVAL_METRIC: kitti
 
         NMS_CONFIG:
             MULTI_CLASSES_NMS: False

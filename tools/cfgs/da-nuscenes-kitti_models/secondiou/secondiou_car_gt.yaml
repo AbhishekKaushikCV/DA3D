@@ -1,11 +1,14 @@
-CLASS_NAMES: ['Vehicle']
+CLASS_NAMES: ['car']
 
 DATA_CONFIG:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
-    INFO_WITH_FAKELIDAR: False
+    _BASE_CONFIG_: cfgs/dataset_configs/da_nuscenes_kitti_dataset.yaml
+    MAX_SWEEPS: 1
+    PRED_VELOCITY: False
+    BALANCED_RESAMPLING: False
+    SHIFT_COOR: [0.0, 0.0, 1.8]
 
     DATA_AUGMENTOR:
-        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size']
+        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size', 'random_local_pyramid_aug']
         AUG_CONFIG_LIST:
             - NAME: gt_sampling
 
@@ -41,6 +44,14 @@ DATA_CONFIG:
 
             - NAME: random_world_scaling
               WORLD_SCALE_RANGE: [0.95, 1.05]
+
+            - NAME: random_local_pyramid_aug
+              DROP_PROB: 0.25
+              SPARSIFY_PROB: 0.05
+              SPARSIFY_MAX_NUM: 50
+              SWAP_PROB: 0.1
+              SWAP_MAX_NUM: 50
+
 
 DATA_CONFIG_TAR:
     _BASE_CONFIG_: cfgs/dataset_configs/da_kitti_dataset.yaml
@@ -82,8 +93,8 @@ MODEL:
 
         ANCHOR_GENERATOR_CONFIG: [
             {
-                'class_name': 'Vehicle',
-                'anchor_sizes': [[3.9, 1.9, 1.5]], # mean car object size in waymo
+                'class_name': 'car',
+                'anchor_sizes': [[4.2, 2.0, 1.6]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
@@ -163,7 +174,7 @@ MODEL:
         SCORE_THRESH: 0.1
         OUTPUT_RAW_SCORE: False
 
-        EVAL_METRIC: waymo
+        EVAL_METRIC: kitti
 
         NMS_CONFIG:
             MULTI_CLASSES_NMS: False
@@ -174,7 +185,7 @@ MODEL:
 
 
 OPTIMIZATION:
-    NUM_EPOCHS: 30
+    NUM_EPOCHS: 50
     BATCH_SIZE_PER_GPU: 4
     OPTIMIZER: adam_onecycle
     LR: 0.003
