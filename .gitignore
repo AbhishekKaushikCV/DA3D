@@ -15,3 +15,4 @@ scripts/
 *.bin
 *.out
 *.json
+*.sh
