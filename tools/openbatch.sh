@@ -30,7 +30,7 @@ python test.py  \
 
 
 #python test.py \
-#--cfg_file cfgs/da-waymo-kitti_models/centerpoint/centerpoint_car.yaml \
+#--cfg_file cfgs/da-waymo-kitti_models/centerpoint/centerpoint.yaml \
 #--ckpt_dir /no_backups/s1435/DA3D/output/da-waymo-kitti_models/centerpoint/centerpoint_car/train_centerpoint_car_waymo/ckpt/ \
 #--extra_tag  testkitti_centerpoint_car \
 #--eval_all \
