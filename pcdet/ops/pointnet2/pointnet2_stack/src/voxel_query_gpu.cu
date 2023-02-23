@@ -7,8 +7,8 @@
 #include "cuda_utils.h"
 
 
-__global__ void voxel_query_kernel_stack(int M, int R1, int R2, int R3, int nsample,
-            float radius, int z_range, int y_range, int x_range, const float *new_xyz,
+__global__ void voxel_query_kernel_stack(int M, int R1, int R2, int R3, int nsample, 
+            float radius, int z_range, int y_range, int x_range, const float *new_xyz, 
             const float *xyz, const int *new_coords, const int *point_indices, int *idx) {
     // :param new_coords: (M1 + M2 ..., 4) centers of the ball query
     // :param point_indices: (B, Z, Y, X)
@@ -16,14 +16,14 @@ __global__ void voxel_query_kernel_stack(int M, int R1, int R2, int R3, int nsam
     //      idx: (M1 + M2, nsample)
     int pt_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (pt_idx >= M) return;
-
+    
     new_xyz += pt_idx * 3;
     new_coords += pt_idx * 4;
     idx += pt_idx * nsample;
 
     curandState state;
     curand_init(pt_idx, 0, 0, &state);
-
+    
     float radius2 = radius * radius;
     float new_x = new_xyz[0];
     float new_y = new_xyz[1];
@@ -33,7 +33,7 @@ __global__ void voxel_query_kernel_stack(int M, int R1, int R2, int R3, int nsam
     int new_coords_z = new_coords[1];
     int new_coords_y = new_coords[2];
     int new_coords_x = new_coords[3];
-
+    
     int cnt = 0;
     int cnt2 = 0;
     // for (int dz = -1*z_range; dz <= z_range; ++dz) {
@@ -55,7 +55,7 @@ __global__ void voxel_query_kernel_stack(int M, int R1, int R2, int R3, int nsam
                             x_coord;
                 int neighbor_idx = point_indices[index];
                 if (neighbor_idx < 0) continue;
-
+                
                 float x_per = xyz[neighbor_idx*3 + 0];
                 float y_per = xyz[neighbor_idx*3 + 1];
                 float z_per = xyz[neighbor_idx*3 + 2];
@@ -63,7 +63,7 @@ __global__ void voxel_query_kernel_stack(int M, int R1, int R2, int R3, int nsam
                 float dist2 = (x_per - new_x) * (x_per - new_x) + (y_per - new_y) * (y_per - new_y) + (z_per - new_z) * (z_per - new_z);
 
                 if (dist2 > radius2) continue;
-
+                
                 ++cnt2;
 
                 if (cnt < nsample) {
@@ -90,10 +90,10 @@ __global__ void voxel_query_kernel_stack(int M, int R1, int R2, int R3, int nsam
 
 
 void voxel_query_kernel_launcher_stack(int M, int R1, int R2, int R3, int nsample,
-    float radius, int z_range, int y_range, int x_range, const float *new_xyz,
+    float radius, int z_range, int y_range, int x_range, const float *new_xyz, 
     const float *xyz, const int *new_coords, const int *point_indices, int *idx) {
     // :param new_coords: (M1 + M2 ..., 4) centers of the voxel query
-    // :param point_indices: (B, Z, Y, X)
+    // :param point_indices: (B, Z, Y, X) 
     // output:
     //      idx: (M1 + M2, nsample)
 
