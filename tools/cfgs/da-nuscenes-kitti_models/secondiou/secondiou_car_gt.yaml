@@ -14,13 +14,12 @@ DATA_CONFIG:
 
               USE_ROAD_PLANE: False
               DB_INFO_PATH:
-                - waymo_processed_data_v0_5_0_waymo_dbinfos_train_sampled_1.pkl
+                - nuscenes_dbinfos_10sweeps_withvelo.pkl
               PREPARE: {
-                filter_by_min_points: [ 'Vehicle:5' ],
-                filter_by_difficulty: [ -1 ],
+                filter_by_min_points: [ 'car:5' ],
               }
 
-              SAMPLE_GROUPS: [ 'Vehicle:15' ]
+              SAMPLE_GROUPS: [ 'car:15' ]
               NUM_POINT_FEATURES: 5
               DATABASE_WITH_FAKELIDAR: False
               REMOVE_EXTRA_WIDTH: [ 0.0, 0.0, 0.0 ]

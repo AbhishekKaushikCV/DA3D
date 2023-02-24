@@ -8,16 +8,15 @@ DATA_CONFIG:
     SHIFT_COOR: [0.0, 0.0, 1.8]
 
     DATA_AUGMENTOR:
-        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size', 'gt_sampling', 'random_local_pyramid_aug']
+        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size','gt_sampling', 'random_local_pyramid_aug']
         AUG_CONFIG_LIST:
             - NAME: gt_sampling
 
               USE_ROAD_PLANE: False
               DB_INFO_PATH:
-                - waymo_processed_data_v0_5_0_waymo_dbinfos_train_sampled_1.pkl
+                - nuscenes_dbinfos_10sweeps_withvelo.pkl
               PREPARE: {
                 filter_by_min_points: [ 'car:5' ],
-                filter_by_difficulty: [ -1 ],
               }
 
               SAMPLE_GROUPS: [ 'car:15' ]
