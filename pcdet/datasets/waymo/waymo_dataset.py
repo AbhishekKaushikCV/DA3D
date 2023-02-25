@@ -47,32 +47,6 @@ class WaymoDataset(DatasetTemplate):
         self.include_waymo_data(self.mode)
 
     def include_waymo_data(self, mode):
-        self.logger.info('Loading Waymo dataset')
-        waymo_infos = []
-
-        num_skipped_infos = 0
-        for k in range(len(self.sample_sequence_list)):
-            sequence_name = os.path.splitext(self.sample_sequence_list[k])[0]
-            info_path = self.data_path / sequence_name / ('%s.pkl' % sequence_name)
-            info_path = self.check_sequence_name_with_all_version(info_path)
-            if not info_path.exists():
-                num_skipped_infos += 1
-                continue
-            with open(info_path, 'rb') as f:
-                infos = pickle.load(f)
-                waymo_infos.extend(infos)
-
-        self.infos.extend(waymo_infos[:])
-        self.logger.info('Total skipped info %s' % num_skipped_infos)
-        self.logger.info('Total samples for Waymo dataset: %d' % (len(waymo_infos)))
-
-        if self.dataset_cfg.SAMPLED_INTERVAL[mode] > 1:
-            sampled_waymo_infos = []
-            for k in range(0, len(self.infos), self.dataset_cfg.SAMPLED_INTERVAL[mode]):
-                sampled_waymo_infos.append(self.infos[k])
-            self.infos = sampled_waymo_infos
-            self.logger.info('Total sampled samples for Waymo dataset: %d' % len(self.infos))
-
         if self.load_kirk:
             kirk_infos = []
 
@@ -92,6 +66,32 @@ class WaymoDataset(DatasetTemplate):
             self.logger.info('Total skipped Kirk info %s' % num_skipped_kirk_infos)
             self.logger.info('Total samples for Kirk dataset: %d' % (len(kirk_infos)))
             self.logger.info('Total combined samples for Waymo & Kirk dataset: %d' % len(self.infos))
+        else:
+            self.logger.info('Loading Waymo dataset')
+            waymo_infos = []
+
+            num_skipped_infos = 0
+            for k in range(len(self.sample_sequence_list)):
+                sequence_name = os.path.splitext(self.sample_sequence_list[k])[0]
+                info_path = self.data_path / sequence_name / ('%s.pkl' % sequence_name)
+                info_path = self.check_sequence_name_with_all_version(info_path)
+                if not info_path.exists():
+                    num_skipped_infos += 1
+                    continue
+                with open(info_path, 'rb') as f:
+                    infos = pickle.load(f)
+                    waymo_infos.extend(infos)
+
+            self.infos.extend(waymo_infos[:])
+            self.logger.info('Total skipped info %s' % num_skipped_infos)
+            self.logger.info('Total samples for Waymo dataset: %d' % (len(waymo_infos)))
+
+            if self.dataset_cfg.SAMPLED_INTERVAL[mode] > 1:
+                sampled_waymo_infos = []
+                for k in range(0, len(self.infos), self.dataset_cfg.SAMPLED_INTERVAL[mode]):
+                    sampled_waymo_infos.append(self.infos[k])
+                self.infos = sampled_waymo_infos
+                self.logger.info('Total sampled samples for Waymo dataset: %d' % len(self.infos))
 
     @staticmethod
     def check_sequence_name_with_all_version(sequence_file):

@@ -2,7 +2,7 @@
 
 # Slurm parameters
 #SBATCH --job-name=kirk
-#SBATCH --output=test_kirk_%j.%N.out
+#SBATCH --output=test_kirk_withoutwaymo_%j.%N.out
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=168:00:00
@@ -26,7 +26,7 @@ CUDA_VISIBLE_DEVICES=0
 python test.py  \
 --cfg_file cfgs/da-waymo-kirk_models/second/second_car.yaml \
 --ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/second/second_car/train_second_nogt_car_waymo/ckpt/checkpoint_epoch_30.pth \
---extra_tag test_kirk
+--extra_tag test_kirk_withoutwaymo
 
 
 #python test.py \
