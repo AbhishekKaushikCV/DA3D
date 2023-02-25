@@ -1,7 +1,7 @@
 CLASS_NAMES: ['Vehicle']
 
 DATA_CONFIG:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset_vs.yaml
+    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
     INFO_WITH_FAKELIDAR: False
 
     DATA_AUGMENTOR:
@@ -51,13 +51,11 @@ DATA_CONFIG:
 
 
 DATA_CONFIG_TAR:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_nuscenes_dataset.yaml
-    TARGET: True
-    CLASS_NAMES: ['car']
-    SHIFT_COOR: [0.0, 0.0, 1.8]
-    MAX_SWEEPS: 1
-    PRED_VELOCITY: False
-    BALANCED_RESAMPLING: False
+    _BASE_CONFIG_: cfgs/dataset_configs/da_kirk_dataset.yaml
+    INFO_WITH_FAKELIDAR: False
+    CLASS_NAMES: ['Vehicle']
+    Target: True
+
 
 MODEL:
     NAME: SECONDNet
