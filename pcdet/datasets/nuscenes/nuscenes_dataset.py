@@ -233,6 +233,7 @@ class NuScenesDataset(DatasetTemplate):
         map_name_to_kitti = {
             'car': 'Car',
             'pedestrian': 'Pedestrian',
+            'bicycle': 'Cyclist',
             'truck': 'Truck',
         }
 

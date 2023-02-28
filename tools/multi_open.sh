@@ -1,8 +1,8 @@
 #!/bin/bash -l
 
 # Slurm parameters
-#SBATCH --job-name=trscip
-#SBATCH --output=train_secondiougt_ped_waymo_%j.%N.out
+#SBATCH --job-name=trscit
+#SBATCH --output=train_secondiougt_nuscenes_%j.%N.out
 #SBATCH --nodes=1
 #SBATCH --ntasks=2
 #SBATCH --ntasks-per-node=2
@@ -31,26 +31,26 @@ CUDA_VISIBLE_DEVICES=0,1
 
 
 # train secondiou_car in nuscenes
-#srun python train.py \
-#--launcher slurm \
-#--tcp_port $PORT \
-#--cfg_file cfgs/da-nuscenes-kitti_models/secondiou/secondiou_car_gt.yaml \
-#--batch_size 2 \
-#--extra_tag train_secondiougt_car_nuscenes \
-#--max_ckpt_save_num 5 \
-#--num_epochs_to_eval 5 \
-#--eval_src
-
-# train secondiou_car in waymo
 srun python train.py \
 --launcher slurm \
 --tcp_port $PORT \
---cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_ped_gt.yaml \
+--cfg_file cfgs/da-nuscenes-kitti_models/secondiou/secondiou_gt.yaml \
 --batch_size 2 \
---extra_tag train_secondiougt_ped_waymo \
+--extra_tag train_secondiougt_nuscenes \
 --max_ckpt_save_num 5 \
 --num_epochs_to_eval 5 \
 --eval_src
+
+# train secondiou_car in waymo
+#srun python train.py \
+#--launcher slurm \
+#--tcp_port $PORT \
+#--cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_gt.yaml \
+#--batch_size 2 \
+#--extra_tag train_secondiougt_waymo \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
 
 
 

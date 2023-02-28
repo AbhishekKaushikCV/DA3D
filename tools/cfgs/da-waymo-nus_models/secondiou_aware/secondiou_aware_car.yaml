@@ -1,11 +1,14 @@
-CLASS_NAMES: ['Vehicle', 'Pedestrian', 'Cyclist']
+CLASS_NAMES: ['Vehicle']
 
 DATA_CONFIG:
     _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
     INFO_WITH_FAKELIDAR: False
+    LINE_DOWNSAMPLE: False # to use line downsample in training
+    HIGH_RESOLUTION_RATE: 0.5
+    MID_RESOLUTION_RATE: 0.3
 
     DATA_AUGMENTOR:
-        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size']
+        DISABLE_AUG_LIST: ['random_object_rotation', 'random_object_scaling', 'normalize_object_size', 'gt_sampling', 'random_local_pyramid_aug']
         AUG_CONFIG_LIST:
             - NAME: gt_sampling
 
@@ -13,11 +16,11 @@ DATA_CONFIG:
               DB_INFO_PATH:
                 - waymo_processed_data_v0_5_0_waymo_dbinfos_train_sampled_1.pkl
               PREPARE: {
-                filter_by_min_points: [ 'Vehicle:5', 'Pedestrian:5', 'Cyclist:5' ],
+                filter_by_min_points: [ 'Vehicle:5' ],
                 filter_by_difficulty: [ -1 ],
               }
 
-              SAMPLE_GROUPS: [ 'Vehicle:15','Pedestrian:15', 'Cyclist:15' ]
+              SAMPLE_GROUPS: [ 'Vehicle:15' ]
               NUM_POINT_FEATURES: 5
               DATABASE_WITH_FAKELIDAR: False
               REMOVE_EXTRA_WIDTH: [ 0.0, 0.0, 0.0 ]
@@ -42,12 +45,21 @@ DATA_CONFIG:
             - NAME: random_world_scaling
               WORLD_SCALE_RANGE: [0.95, 1.05]
 
+            - NAME: random_local_pyramid_aug
+              DROP_PROB: 0.25
+              SPARSIFY_PROB: 0.05
+              SPARSIFY_MAX_NUM: 50
+              SWAP_PROB: 0.1
+              SWAP_MAX_NUM: 50
+
 DATA_CONFIG_TAR:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_kitti_dataset.yaml
+    _BASE_CONFIG_: cfgs/dataset_configs/da_nuscenes_dataset.yaml
     TARGET: True
-    FOV_POINTS_ONLY: False
-    CLASS_NAMES: ['Car', 'Pedestrian', 'Cyclist']
-    SHIFT_COOR: [0.0, 0.0, 1.6]
+    CLASS_NAMES: ['car']
+    SHIFT_COOR: [0.0, 0.0, 1.8]
+    MAX_SWEEPS: 1
+    PRED_VELOCITY: False
+    BALANCED_RESAMPLING: False
 
 MODEL:
     NAME: SECONDNetIoU
@@ -83,33 +95,13 @@ MODEL:
         ANCHOR_GENERATOR_CONFIG: [
             {
                 'class_name': 'Vehicle',
-                'anchor_sizes': [[3.8, 1.7, 1.50]],
+                'anchor_sizes': [[4.2, 1.8, 1.65]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
                 'feature_map_stride': 8,
                 'matched_threshold': 0.55,
                 'unmatched_threshold': 0.4
-            },
-            {
-                'class_name': 'Pedestrian',
-                'anchor_sizes': [[0.91, 0.86, 1.73]],
-                'anchor_rotations': [0, 1.57],
-                'anchor_bottom_heights': [0],
-                'align_center': False,
-                'feature_map_stride': 8,
-                'matched_threshold': 0.5,
-                'unmatched_threshold': 0.35
-            },
-            {
-                'class_name': 'Cyclist',
-                'anchor_sizes': [[1.78, 0.84, 1.78]],
-                'anchor_rotations': [0, 1.57],
-                'anchor_bottom_heights': [0],
-                'align_center': False,
-                'feature_map_stride': 8,
-                'matched_threshold': 0.5,
-                'unmatched_threshold': 0.35
             }
         ]
 
@@ -132,6 +124,7 @@ MODEL:
     ROI_HEAD:
         NAME: SECONDHead
         CLASS_AGNOSTIC: True
+        CIA_SSD: True
 
         SHARED_FC: [256, 256]
         IOU_FC: [256, 256]
