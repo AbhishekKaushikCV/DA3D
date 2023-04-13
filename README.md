@@ -10,7 +10,9 @@ More updates on OpenPCDet are supposed to be compatible with our code.
 
 |                                                                                             |     method     | Car@R40 | Ped@R40 | Cyc@R40 | 
 |---------------------------------------------------------------------------------------------|:--------------:|:-------:|:-------:|:-------:|
-| [SECOND-IoU](tools/cfgs/da-waymo-kitti_models/secondiou/secondiou_car.yaml)              | tuned anchor(our)  |  64.03
+| [SECOND-IoU-GT](tools/cfgs/da-waymo-kitti_models/secondiou/secondiou_gt.yaml) | Tuned Anchor (Our) | 64.36 | 49.31 | 55.97
+| [SECOND-IoU-LD](tools/cfgs/da-waymo-kitti_models/secondiou/secondiou_ld.yaml) | Tuned Anchor (Our) | 64.92 | 39.10 | - 
+| [SECOND-IoU](tools/cfgs/da-waymo-kitti_models/secondiou/secondiou_car.yaml)              | Tuned Anchor(Our)  |  64.03
 | [SECOND-IoU](tools/cfgs/da-waymo-kitti_models/secondiou/secondiou_st3d_car.yaml)            |      ST3D      |  62.19  |  48.33  |  46.09  | 
 | [SECOND-IoU](tools/cfgs/da-waymo-kitti_models/secondiou_st3d/secondiou_st3d_car.yaml)       |  ST3D (w/ sn)  |  73.62  |  51.92  |  53.00  |
 | [SECOND-IoU](tools/cfgs/da-waymo-kitti_models/secondiou_st3d/secondiou_st3d++_ros_car.yaml) |     ST3D++     |  65.10  |  53.87  |  53.43  |
@@ -43,10 +45,12 @@ More updates on OpenPCDet are supposed to be compatible with our code.
 ### Waymo -> nuScenes TASK
 |                                             | method | Car@R11 | Car@R40 | download | 
 |---------------------------------------------|----------:|:-------:|:-------:|:---------:|
-| [SECOND-IoU](tools/cfgs/da-waymo-nus_models/secondiou_st3d/secondiou_st3d.yaml) | ST3D | 23.24 | 20.19 | [model](https://drive.google.com/file/d/150gvNE29iZ8Ah4L4uO_E40x0fyr_cn_J/view?usp=sharing) | 
-| [PVRCNN](tools/cfgs/da-waymo-nus_models/pvrcnn_st3d/pvrcnn_st3d.yaml)    | ST3D | 27.18 | 22.99 | [model](https://drive.google.com/file/d/1Gk5i4qRz5tLU7Yd4U-oPureN9cV6TaLa/view?usp=sharing) |
-| [SECOND-IoU](tools/cfgs/da-waymo-nus_models/secondiou_st3d/secondiou_st3d.yaml) | ST3D (w/ sn) | 23.52 | 20.38 | [model](https://drive.google.com/file/d/1WUHBTZylVTFLdSvO8wrgti27SEjFJxQl/view?usp=sharing) | 
-| [PVRCNN](tools/cfgs/da-waymo-nus_models/pvrcnn_st3d/pvrcnn_st3d.yaml)    | ST3D (w/ sn)   | 28.06 | 23.67 | [model](https://drive.google.com/file/d/1KTCvmltfwIEh9i2t3Pu9APp_2GKyENme/view?usp=sharing) |
+| [SECOND-IoU](tools/cfgs/da-waymo-nus_models/secondiou/secondiou_car.yaml) | Tuned Anchor(Our) | 19.35 |  |  |
+| [SECOND-LD](tools/cfgs/da-waymo-nus_models/second/second_ld.yaml) | Tuned Anchor(Our) | 23.46 |  |  |
+| [SECOND-IoU](tools/cfgs/da-waymo-nus_models/secondiou_st3d/secondiou_st3d.yaml) | ST3D | 23.24 | 20.19 |  | 
+| [PVRCNN](tools/cfgs/da-waymo-nus_models/pvrcnn_st3d/pvrcnn_st3d.yaml)    | ST3D | 27.18 | 22.99 |  |
+| [SECOND-IoU](tools/cfgs/da-waymo-nus_models/secondiou_st3d/secondiou_st3d.yaml) | ST3D (w/ sn) | 23.52 | 20.38 | | 
+| [PVRCNN](tools/cfgs/da-waymo-nus_models/pvrcnn_st3d/pvrcnn_st3d.yaml)    | ST3D (w/ sn)   | 28.06 | 23.67 | |
 
 ## Installation
 
