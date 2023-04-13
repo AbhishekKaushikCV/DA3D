@@ -2,7 +2,7 @@
 
 # Slurm parameters
 #SBATCH --job-name=test
-#SBATCH --output=testnus_pvrcnn_gt_newanchor_%j.%N.out
+#SBATCH --output=testwaymo_secondiouawaregt_trainedanchor4_%j.%N.out
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=168:00:00
@@ -14,8 +14,86 @@
 module load cuda/11.1
 pyenv activate rp
 
-
 CUDA_VISIBLE_DEVICES=0
+
+# nus2kitti pvrcnngt
+#python test.py --cfg_file cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_car_gt.yaml --ckpt /no_backups/s1435/DA3D/output/da-nuscenes-kitti_models/pvrcnn/pvrcnn_car_gt/train_pvrcnngt_car_nuscenes/ckpt/checkpoint_epoch_50.pth --extra_tag testkitti_pvrcnngt_tunedanchor[4.0,1.7,1.50] --set DATA_CONFIG_TAR.FOV_POINTS_ONLY True
+
+# NUS2WAYMO pvrcnngt
+#python test.py \
+#--cfg_file cfgs/da-nuscenes-waymo_models/pvrcnn/pvrcnn_car_gt.yaml \
+#--ckpt /no_backups/s1435/DA3D/output/da-nuscenes-kitti_models/pvrcnn/pvrcnn_car_gt/train_pvrcnngt_car_nuscenes/ckpt/checkpoint_epoch_50.pth \
+#--extra_tag testwaymo_pvrcnngt_trainedanchor
+
+# NUS2WAYMO secondiougt
+# python test.py \
+# --cfg_file cfgs/da-nuscenes-waymo_models/secondiou/secondiou_car_gt.yaml \
+# --ckpt /no_backups/s1435/DA3D/output/da-nuscenes-kitti_models/secondiou/secondiou_car_gt/train_secondiougt_car_nuscenes/ckpt/checkpoint_epoch_50.pth \
+# --extra_tag testwaymo_secondiougt_trainedanchor3
+
+# NUS2WAYMO secondiouawaregt
+ python test.py \
+ --cfg_file cfgs/da-nuscenes-waymo_models/secondiou_aware/secondiou_aware_car_gt.yaml \
+ --ckpt /no_backups/s1435/DA3D/output/da-nuscenes-kitti_models/secondiou/secondiou_car_gt/train_secondiougt_car_nuscenes/ckpt/checkpoint_epoch_50.pth \
+ --extra_tag testwaymo_secondiouawaregt_trainedanchor4
+
+
+
+
+
+
+# train kitti oracles
+#python train.py \
+#--cfg_file cfgs/kitti_models/secondiou/secondiou.yaml \
+#--batch_size 2 \
+#--extra_tag train_secondiou_kitti \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
+
+#python train.py \
+#--cfg_file cfgs/kitti_models/second/second.yaml \
+#--batch_size 2 \
+#--extra_tag train_secondgt_kitti \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
+
+#python train.py \
+#--cfg_file cfgs/da-nuscenes-kitti_models/secondiou_aware/secondiou_aware_car_gt.yaml \
+#--batch_size 2 \
+#--extra_tag train_secondiouawaregt_car_nuscenes \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
+
+
+
+#SECONDldros car
+#python test.py --cfg_file cfgs/da-waymo-kitti_models/second/second_car_ld_ros.yaml --ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/second/second_car_ld_ros/train_second_car_ldros/ckpt/checkpoint_epoch_30.pth --extra_tag testkitti_secondldros_oldanchor --set DATA_CONFIG_TAR.FOV_POINTS_ONLY True
+
+# for demo (example from pcdet )on kitti dataset
+#python demo.py --cfg_file cfgs/kitti_models/pv_rcnn.yaml \
+#--ckpt pv_rcnn_8369.pth \
+#--data_path ${POINT_CLOUD_DATA}   # data/kitti/training/velodyne/000008.bin
+
+# working visualisation
+#python demo.py --cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_ros.yaml --ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_ros/train_secondiou_ros_waymo/ckpt/checkpoint_epoch_30.pth --data_path /data/private/m142_datasets/object/training/velodyne/006551.bin
+
+
+
+
+#python test.py \
+#--cfg_file cfgs/da-nuscenes-kitti_models/second/second_car_gt.yaml \
+#--ckpt /no_backups/s1435/DA3D/output/da-nuscenes-kitti_models/second/second_car_gt/train_secondgt_car_nuscenes/ckpt/checkpoint_epoch_30.pth \
+#--extra_tag test_nus2kitti_[3.89,1.62,1.53] \
+#--set DATA_CONFIG_TAR.FOV_POINTS_ONLY True
+
+
+
+
+#/no_backups/s1435/DA3D/output/da-waymo-kitti_models/second/second_car_ld_ros/train_second_car_ldros/ckpt/checkpoint_epoch_30.pth
+
 
 #python test.py \
 #--cfg_file  cfgs/da-waymo-nus_models/pvrcnn_centerhead/pvrcnn_centerhead.yaml \
@@ -46,7 +124,25 @@ CUDA_VISIBLE_DEVICES=0
 
 #python test.py --cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_gt.yaml --ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_gt/train_secondiou_gt_waymo/ckpt/checkpoint_epoch_30.pth --extra_tag testkitti_secondiougt_trainedanchor  --set DATA_CONFIG_TAR.FOV_POINTS_ONLY True
 
+#python test.py \
+#--cfg_file  cfgs/da-waymo-kitti_models/secondiou/secondiou_cyc_gt.yaml \
+#--ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_cyc_gt/train_secondiougt_cyc_waymo/ckpt/checkpoint_epoch_30.pth  \
+#--extra_tag  testwaymo_secondiougt_cyc_waymometric \
+#--batch_size 2 \
+#--eval_src
 
+#python test.py \
+#--cfg_file  cfgs/da-nuscenes-kitti_models/second/second_car_ros.yaml \
+#--ckpt /no_backups/s1435/DA3D/output/da-nuscenes-kitti_models/second/second_car_ros/train_secondros_car_nuscenes_meananchor/ckpt/checkpoint_epoch_50.pth \
+#--extra_tag  testkitti_secondros_car_newanchor \
+#--set DATA_CONFIG_TAR.FOV_POINTS_ONLY True
+
+
+#python test.py \
+#--cfg_file cfgs/da-nuscenes-waymo_models/second/second_car_gt.yaml \
+#--ckpt /no_backups/s1435/DA3D/output/da-nuscenes-kitti_models/second/second_car_gt/train_secondgt_car_nuscenes/ckpt/checkpoint_epoch_30.pth \
+#--batch_size 2 \
+#--extra_tag test_nus2waymo_255
 
 
 
@@ -59,13 +155,21 @@ CUDA_VISIBLE_DEVICES=0
 
 
 # test waymo secondioucargt on nuscenes
-python test.py --cfg_file cfgs/da-waymo-nus_models/pvrcnn/pvrcnn_car.yaml \
---ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/pvrcnn/pvrcnn_car/train_pvrcnn_nogt_car_waymo/ckpt/checkpoint_epoch_30.pth \
---extra_tag testnus_pvrcnn_newanchor
-
-python test.py --cfg_file cfgs/da-waymo-nus_models/pvrcnn/pvrcnn_car_gt.yaml \
---ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/pvrcnn/pvrcnn_car_gt/train_pvrcnn_gt_car_waymo/ckpt/checkpoint_epoch_30.pth \
---extra_tag testnus_pvrcnn_newanchor
+#python test.py --cfg_file cfgs/da-waymo-nus_models/secondiou/secondiou_car_ros.yaml \
+#--ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_car_ros/train_secondiou_ros_car_waymo/ckpt/checkpoint_epoch_30.pth \
+#--extra_tag testnus_secondiouros_newanchor
+#
+#python test.py --cfg_file cfgs/da-waymo-nus_models/secondiou/secondiou_car_ld.yaml \
+#--ckpt  /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_car_ld/train_secondiou_ld_car_waymo/ckpt/checkpoint_epoch_30.pth \
+#--extra_tag testnus_secondiould_newanchor
+#
+#python test.py --cfg_file cfgs/da-waymo-nus_models/secondiou/secondiou_car.yaml \
+#--ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_car/train_secondiou_nogt_car_waymo/ckpt/checkpoint_epoch_30.pth \
+#--extra_tag testnus_secondiou_newanchor
+#
+#python test.py --cfg_file cfgs/da-waymo-nus_models/secondiou/secondiou_car_sa.yaml \
+#--ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_car_sa/train_secondiou_sa_car_waymo/ckpt/checkpoint_epoch_30.pth \
+#--extra_tag testnus_secondiousa_newanchor
 
 #python test.py --cfg_file cfgs/da-waymo-nus_models/secondiou_aware/secondiou_aware_car_ld.yaml \
 #--ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou_aware/secondiou_aware_car_ld/train_secondiou_awareld/ckpt/checkpoint_epoch_30.pth \
@@ -164,7 +268,7 @@ python test.py --cfg_file cfgs/da-waymo-nus_models/pvrcnn/pvrcnn_car_gt.yaml \
 #--extra_tag testkitti_fovt_pvrcnnwaymo_e28
 # train secondiou_car in waymo
 
-#python train.py --cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_car_gt.yaml \
+#python train.py --cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_aware_car_gt.yaml \
 #--batch_size 2 \
 #--max_ckpt_save_num 5 \
 #--num_epochs_to_eval 5 \
@@ -178,7 +282,7 @@ python test.py --cfg_file cfgs/da-waymo-nus_models/pvrcnn/pvrcnn_car_gt.yaml \
 #--extra_tag train_pvrcnn_gt_car_waymo_E30
 
 ## test trained secondiou(waymo) on kitti
-#python test.py --cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_car_gt.yaml \
+#python test.py --cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_aware_car_gt.yaml \
 #--ckpt_dir /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_car/train_secondiou_nogt_car_waymo/ckpt/ \
 #--extra_tag testkitti_secondiounogtwaymo \
 #--eval_all \
@@ -186,7 +290,7 @@ python test.py --cfg_file cfgs/da-waymo-nus_models/pvrcnn/pvrcnn_car_gt.yaml \
 
 
 ## test trained secondiou(waymo) on nuscenes
-#python test.py --cfg_file cfgs/da-waymo-nus_models/secondiou/secondiou_cyc.yaml \
+#python test.py --cfg_file cfgs/da-waymo-nus_models/secondiou/secondiou_gt_cyc_st3d.yaml \
 #--ckpt_dir /no_backups/s1435/DA3D/output/da-waymo-kitti_models/secondiou/secondiou_cyc/train_secondiou_nogt_cyc_waymo/ckpt/ \
 #--extra_tag testnus_secondiounogtwaymo \
 #--eval_all

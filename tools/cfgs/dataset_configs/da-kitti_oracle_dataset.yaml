@@ -1,7 +1,7 @@
 DATASET: 'KittiDataset'
-DATA_PATH: '../data/kitti'
+DATA_PATH: '/data/private/m142_datasets/object'
 
-POINT_CLOUD_RANGE: [0, -75.2, -4, 75.2, 75.2, 2]
+POINT_CLOUD_RANGE: [0, -75.2, -4, 75.2, 75.2, 2] # trained with or original [0, -75.2, -4, 75.2, 75.2, 2]
 
 DATA_SPLIT: {
     'train': train,
@@ -13,10 +13,10 @@ INFO_PATH: {
     'test': [kitti_infos_val.pkl],
 }
 
-FOV_POINTS_ONLY: True
+FOV_POINTS_ONLY: True # to visualise the complete cloud set it to false in oracles detection
 
 DATA_AUGMENTOR:
-    DISABLE_AUG_LIST: ['gt_sampling']
+    DISABLE_AUG_LIST: []
     AUG_CONFIG_LIST:
         - NAME: gt_sampling
           USE_ROAD_PLANE: True
@@ -45,7 +45,7 @@ DATA_AUGMENTOR:
 
 POINT_FEATURE_ENCODING: {
     encoding_type: absolute_coordinates_encoding,
-    used_feature_list: ['x', 'y', 'z'],
+    used_feature_list: ['x', 'y', 'z', 'intensity'],
     src_feature_list: ['x', 'y', 'z', 'intensity'],
 }
 

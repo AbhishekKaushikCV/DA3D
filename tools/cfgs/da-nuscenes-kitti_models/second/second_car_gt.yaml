@@ -93,7 +93,7 @@ MODEL:
         ANCHOR_GENERATOR_CONFIG: [
             {
                 'class_name': 'car',
-                'anchor_sizes': [[3.8, 1.7, 1.50]],
+                'anchor_sizes': [[3.89,1.62,1.53]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
@@ -135,7 +135,7 @@ MODEL:
 
 
 OPTIMIZATION:
-    NUM_EPOCHS: 30
+    NUM_EPOCHS: 50
     BATCH_SIZE_PER_GPU: 4
     OPTIMIZER: adam_onecycle
     LR: 0.003

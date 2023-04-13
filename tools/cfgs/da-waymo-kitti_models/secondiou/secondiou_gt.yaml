@@ -1,7 +1,7 @@
 CLASS_NAMES: ['Vehicle', 'Pedestrian', 'Cyclist']
 
 DATA_CONFIG:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset.yaml
+    _BASE_CONFIG_: cfgs/dataset_configs/da_waymo_dataset_intensity.yaml
     INFO_WITH_FAKELIDAR: False
 
     DATA_AUGMENTOR:
@@ -43,9 +43,9 @@ DATA_CONFIG:
               WORLD_SCALE_RANGE: [0.95, 1.05]
 
 DATA_CONFIG_TAR:
-    _BASE_CONFIG_: cfgs/dataset_configs/da_kitti_dataset.yaml
+    _BASE_CONFIG_: cfgs/dataset_configs/da_kitti_dataset_intensity.yaml
     TARGET: True
-    FOV_POINTS_ONLY: False
+    FOV_POINTS_ONLY: True
     CLASS_NAMES: ['Car', 'Pedestrian', 'Cyclist']
     SHIFT_COOR: [0.0, 0.0, 1.6]
 
@@ -83,7 +83,7 @@ MODEL:
         ANCHOR_GENERATOR_CONFIG: [
             {
                 'class_name': 'Vehicle',
-                'anchor_sizes': [[3.8, 1.7, 1.50]],
+                'anchor_sizes': [[4.2, 2.0, 1.60]], # ORIGINAL: [4.2, 2.0, 1.60] # tuned: [3.8, 1.7, 1.50]
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
@@ -93,7 +93,7 @@ MODEL:
             },
             {
                 'class_name': 'Pedestrian',
-                'anchor_sizes': [[0.91, 0.86, 1.73]],
+                'anchor_sizes': [[0.91, 0.86, 1.73]], # ORIGINAL: [0.91, 0.86, 1.73] # tuned: [0.91, 0.71, 1.73]
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
@@ -103,7 +103,7 @@ MODEL:
             },
             {
                 'class_name': 'Cyclist',
-                'anchor_sizes': [[1.78, 0.84, 1.78]],
+                'anchor_sizes': [[1.78, 0.84, 1.78]], # ORIGINAL: [1.78, 0.84, 1.78] # tuned: [1.72, 0.61, 1.76]
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [0],
                 'align_center': False,
@@ -183,7 +183,7 @@ MODEL:
         SCORE_THRESH: 0.1
         OUTPUT_RAW_SCORE: False
 
-        EVAL_METRIC: kitti
+        EVAL_METRIC: waymo
 
         NMS_CONFIG:
             MULTI_CLASSES_NMS: False

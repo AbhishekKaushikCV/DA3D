@@ -1,16 +1,16 @@
 #!/bin/bash -l
 
 # Slurm parameters
-#SBATCH --job-name=trscit
-#SBATCH --output=train_secondiougt_nuscenes_%j.%N.out
+#SBATCH --job-name=trce
+#SBATCH --output=train_secondiougt_car_intensity_waymo_%j.%N.out
 #SBATCH --nodes=1
 #SBATCH --ntasks=2
 #SBATCH --ntasks-per-node=2
 #SBATCH --cpus-per-task=4
 #SBATCH --time=168:00:00
 #SBATCH --mem=120G
-#SBATCH --gpus=geforce_rtx_2080_ti:2
-# SBATCH --gpus=rtx_a5000:2
+# SBATCH --gpus=geforce_gtx_1080_ti:2
+#SBATCH --gpus=rtx_a5000:2
 #SBATCH --qos=batch
 
 while true
@@ -30,24 +30,77 @@ pyenv activate venv
 CUDA_VISIBLE_DEVICES=0,1
 
 
-# train secondiou_car in nuscenes
+# to see the name of the gpus and infos
+#sinfo -o "%20N  %10c  %10m  %25f  %25G "
+
+# KITTI Oracles dataset
+
+#srun python train.py \
+#--launcher slurm \
+#--tcp_port $PORT \
+#--cfg_file cfgs/kitti_models/second/second.yaml \
+#--batch_size 2 \
+#--extra_tag train_secondnogt_kitti_e80 \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
+#
+#
+#srun python train.py \
+#--launcher slurm \
+#--tcp_port $PORT \
+#--cfg_file cfgs/kitti_models/secondiou/secondiou.yaml \
+#--batch_size 2 \
+#--extra_tag train_secondiou_kitti_e80 \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
+
+#srun python train.py \
+#--launcher slurm \
+#--tcp_port $PORT \
+#--cfg_file cfgs/da-nuscenes-kitti_models/centerpoint/centerpoint_car_gt.yaml \
+#--batch_size 2 \
+#--extra_tag train_centerpoint_cargt_nuscenes \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
+
+
+
+
+
+
+
+
+## train secondiou_car in nuscenes
+#srun python train.py \
+#--launcher slurm \
+#--tcp_port $PORT \
+#--cfg_file cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_car_gt.yaml \
+#--batch_size 2 \
+#--extra_tag train_pvrcnngt_car_nuscenes \
+#--max_ckpt_save_num 5 \
+#--num_epochs_to_eval 5 \
+#--eval_src
+
+# train secondiou_car in waymo
 srun python train.py \
 --launcher slurm \
 --tcp_port $PORT \
---cfg_file cfgs/da-nuscenes-kitti_models/secondiou/secondiou_gt.yaml \
+--cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_car_gt_intensity.yaml \
 --batch_size 2 \
---extra_tag train_secondiougt_nuscenes \
+--extra_tag train_secondiougt_car_intensity_waymo \
 --max_ckpt_save_num 5 \
 --num_epochs_to_eval 5 \
 --eval_src
 
-# train secondiou_car in waymo
 #srun python train.py \
 #--launcher slurm \
 #--tcp_port $PORT \
-#--cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_gt.yaml \
+#--cfg_file cfgs/da-waymo-kitti_models/second/second_gt_intensity.yaml \
 #--batch_size 2 \
-#--extra_tag train_secondiougt_waymo \
+#--extra_tag train_secondgt_intensity_waymo \
 #--max_ckpt_save_num 5 \
 #--num_epochs_to_eval 5 \
 #--eval_src
@@ -96,9 +149,9 @@ srun python train.py \
 #srun python train.py \
 #--launcher slurm \
 #--tcp_port $PORT \
-#--cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_car_gt.yaml \
+#--cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_gt.yaml \
 #--batch_size 2 \
-#--extra_tag train_secondiou_gt_car_waymo \
+#--extra_tag train_secondiou_gtintensity255_waymo \
 #--max_ckpt_save_num 5 \
 #--num_epochs_to_eval 5 \
 #--eval_src

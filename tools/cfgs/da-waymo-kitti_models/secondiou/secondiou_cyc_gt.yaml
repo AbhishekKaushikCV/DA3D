@@ -89,7 +89,7 @@ MODEL:
         ANCHOR_GENERATOR_CONFIG: [
             {
                 'class_name': 'Cyclist',
-                'anchor_sizes': [ [ 1.78, 0.84, 1.78 ] ],
+                'anchor_sizes': [ [1.78, 0.84, 1.78] ],
                 'anchor_rotations': [ 0, 1.57 ],
                 'anchor_bottom_heights': [ 0 ],
                 'align_center': False,
@@ -169,7 +169,7 @@ MODEL:
         SCORE_THRESH: 0.1
         OUTPUT_RAW_SCORE: False
 
-        EVAL_METRIC: kitti
+        EVAL_METRIC: waymo
 
         NMS_CONFIG:
             MULTI_CLASSES_NMS: False
