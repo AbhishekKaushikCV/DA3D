@@ -164,6 +164,7 @@ class WaymoDataset(DatasetTemplate):
             lidar_file = self.data_path / sequence_name / ('%04d.npy' % sample_idx)
 
         else:
+
             lidar_file = self.root_path / 'modes' / '64' / sequence_name / ('%04d.npy' % sample_idx)
 
 
@@ -172,7 +173,7 @@ class WaymoDataset(DatasetTemplate):
 
         points_all, NLZ_flag = point_features[:, 0:5], point_features[:, 5]
         points_all = points_all[NLZ_flag == -1]
-        points_all[:, 3] = np.tanh(points_all[:, 3])
+        points_all[:, 3] = np.tanh(points_all[:, 3]*255)# for nuscenes to waymo *255, for reflectance
         return points_all
 
     def __len__(self):
