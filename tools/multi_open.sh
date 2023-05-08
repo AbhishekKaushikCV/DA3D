@@ -2,15 +2,15 @@
 
 # Slurm parameters
 #SBATCH --job-name=trce
-#SBATCH --output=train_secondiougt_car_intensity_waymo_%j.%N.out
+#SBATCH --output=train_secondiouawaresa_car_waymo_%j.%N.out
 #SBATCH --nodes=1
 #SBATCH --ntasks=2
 #SBATCH --ntasks-per-node=2
 #SBATCH --cpus-per-task=4
 #SBATCH --time=168:00:00
 #SBATCH --mem=120G
-# SBATCH --gpus=geforce_gtx_1080_ti:2
-#SBATCH --gpus=rtx_a5000:2
+#SBATCH --gpus=geforce_gtx_1080_ti:2
+# SBATCH --gpus=rtx_a5000:2
 #SBATCH --qos=batch
 
 while true
@@ -88,9 +88,9 @@ CUDA_VISIBLE_DEVICES=0,1
 srun python train.py \
 --launcher slurm \
 --tcp_port $PORT \
---cfg_file cfgs/da-waymo-kitti_models/secondiou/secondiou_car_gt_intensity.yaml \
+--cfg_file cfgs/da-waymo-kitti_models/secondiou_aware/secondiou_aware_car_sa.yaml \
 --batch_size 2 \
---extra_tag train_secondiougt_car_intensity_waymo \
+--extra_tag train_secondiouawaresa_car_waymo \
 --max_ckpt_save_num 5 \
 --num_epochs_to_eval 5 \
 --eval_src

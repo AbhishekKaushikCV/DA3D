@@ -1,3 +1,5 @@
+import math
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -5,6 +7,8 @@ from ....ops.pointnet2.pointnet2_stack import pointnet2_modules as pointnet2_sta
 from ....ops.pointnet2.pointnet2_stack import pointnet2_utils as pointnet2_stack_utils
 from ....utils import common_utils
 from ...backbones_2d.transformer import TransformerEncoderLayer3D, TransformerEncoder
+from ...roi_heads.target_assigner.proposal_target_layer import ProposalTargetLayer
+from ...model_utils.model_nms_utils import class_agnostic_nms
 
 
 def bilinear_interpolate_torch(im, x, y):
@@ -419,13 +423,10 @@ class VoxelSetAbstractionTransFusionv5(nn.Module):
         else:
             self.transnorm2 = None
         # multi_location
-        self.trans_layer = TransformerEncoder(TransformerEncoderLayer3D(c_in, self.model_cfg.FUSION_HEAD),
-                                              self.model_cfg.NUM_LAYERS, self.transnorm)
+        self.trans_layer = TransformerEncoder(TransformerEncoderLayer3D(c_in, self.model_cfg.FUSION_HEAD), self.model_cfg.NUM_LAYERS, self.transnorm)
         # have multi-modality + multi-scale
-        self.trans_fusion_layer = TransformerEncoder(
-            TransformerEncoderLayer3D(self.fusion_channel, self.model_cfg.FUSION2_HEAD), self.model_cfg.NUM_LAYERS2,
-            self.transnorm2)
-        self.reduce_radius = self.model_cfg.REDUCE_RADIUS ** 2
+        self.trans_fusion_layer = TransformerEncoder(TransformerEncoderLayer3D(self.fusion_channel, self.model_cfg.FUSION2_HEAD), self.model_cfg.NUM_LAYERS2, self.transnorm2)
+        self.reduce_radius = self.model_cfg.REDUCE_RADIUS**2
         self.topks = self.model_cfg.NMS_CONFIG.TOPK
         self.max_keypoints = self.model_cfg.NMS_CONFIG.MAX_POINTS
 

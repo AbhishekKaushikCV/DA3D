@@ -173,7 +173,7 @@ class WaymoDataset(DatasetTemplate):
 
         points_all, NLZ_flag = point_features[:, 0:5], point_features[:, 5]
         points_all = points_all[NLZ_flag == -1]
-        points_all[:, 3] = np.tanh(points_all[:, 3]*255)# for nuscenes to waymo *255, for reflectance
+        points_all[:, 3] = np.tanh(points_all[:, 3])# for nuscenes to waymo *255, for reflectance
         return points_all
 
     def __len__(self):
