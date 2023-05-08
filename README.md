@@ -63,6 +63,11 @@ Please refer to [GETTING_STARTED.md](docs/GETTING_STARTED.md) to learn more usag
 ## For Demo
 Please refer to [DEMO.md](docs/DEMO.md), for visualization of detections, and point cloud data.
 
+## Sample Detection Visualization
+<p align="center">
+  <img src="demo.png" width="99%">
+</p>
+
 ## Acknowledgement
 
 Our code is heavily based on [OpenPCDet v0.3](https://github.com/open-mmlab/OpenPCDet/commit/e3bec15f1052b4827d942398f20f2db1cb681c01). Thanks OpenPCDet Development Team for their awesome codebase.
