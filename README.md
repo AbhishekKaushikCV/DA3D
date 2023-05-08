@@ -60,6 +60,9 @@ Please refer to [INSTALL.md](docs/INSTALL.md) for the installation.
 
 Please refer to [GETTING_STARTED.md](docs/GETTING_STARTED.md) to learn more usage about this project.
 
+## For Demo
+Please refer to [DEMO.md](docs/DEMO.md), for visualization of detections, and point cloud data.
+
 ## Acknowledgement
 
 Our code is heavily based on [OpenPCDet v0.3](https://github.com/open-mmlab/OpenPCDet/commit/e3bec15f1052b4827d942398f20f2db1cb681c01). Thanks OpenPCDet Development Team for their awesome codebase.

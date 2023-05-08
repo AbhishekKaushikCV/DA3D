@@ -36,6 +36,12 @@ python demo.py --cfg_file cfgs/kitti_models/pv_rcnn.yaml \
     --ckpt pv_rcnn_8369.pth \
     --data_path ${POINT_CLOUD_DATA}
 ```
+4. Run the demo_common with a pretrained model (e.g. PV-RCNN) on waymo, kitti, and nuscenes dataset.:
+```shell
+python demo_common.py --cfg_file cfgs/kitti_models/pv_rcnn.yaml \
+    --ckpt pv_rcnn_8369.pth 
+```
+
 Here `${POINT_CLOUD_DATA}` could be the following format: 
 * Your transformed custom data with a single numpy file like `my_data.npy`.  
 * Your transformed custom data with a directory to test with multiple point cloud data.
