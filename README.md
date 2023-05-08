@@ -23,24 +23,24 @@ More updates on OpenPCDet are supposed to be compatible with our code.
 
 
 ### nuScenes -> KITTI TASK
-|                                                                                                |     method     | Car@R40 | Ped@R40 | Cyc@R40 | 
-|------------------------------------------------------------------------------------------------|:--------------:|:-------:|:-------:|:-------:|
+|                                                                                                |     method     | Car@R40 | 
+|------------------------------------------------------------------------------------------------|:--------------:|:-------:|
 | [SECOND-IoU-GT](tools/cfgs/da-nuscenes-kitti_models/secondiou/secondiou_car_gt.yaml) | Tuned Anchor (Our) | 46.34
-| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou/secondiou_old_anchor.yaml)          |  Source Only   |  17.92  |    -    |    -    | 
-| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou/secondiou_old_anchor_ros.yaml)      |      ROS       |  25.37  |    -    |    -    | 
-| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou/secondiou_old_anchor_sn.yaml)       |       SN       |  21.23  |  34.36  |  5.67   |
-| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou_st3d/secondiou_st3d_car.yaml)       |      ST3D      |  55.19  |    -    |    -    |
-| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou_st3d/secondiou_st3d_car.yaml)       |  ST3D (w/ SN)  |  62.27  |    -    |    -    |
-| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou_st3d/secondiou_st3d++_ros_car.yaml) |     ST3D++     |  66.01  |  45.23  |  25.98  |
-| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou_st3d/secondiou_st3d++_sn_car.yaml)  | ST3D++ (w/ SN) |  66.24  |  46.75  |  22.66  |
-| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_old_anchor.yaml)                   |  Source Only   |  37.17  |    -    |    -    |
-| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_old_anchor_ros.yaml)               |      ROS       |  38.84  |    -    |    -    | 
-| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_old_anchor_sn.yaml)                |       SN       |  49.47  |    -    |    -    |
-| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn_st3d/pvrcnn_st3d.yaml)                    |      ST3D      |  71.11  |    -    |    -    | 
-| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn_st3d/pvrcnn_st3d.yaml)                    |  ST3D (w/ SN)  |  73.16  |    -    |    -    |
+| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou/secondiou_old_anchor.yaml)          |  Source Only   |  17.92  |   
+| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou/secondiou_old_anchor_ros.yaml)      |      ROS       |  25.37  |    
+| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou/secondiou_old_anchor_sn.yaml)       |       SN       |  21.23  |  
+| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou_st3d/secondiou_st3d_car.yaml)       |      ST3D      |  55.19  |    
+| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou_st3d/secondiou_st3d_car.yaml)       |  ST3D (w/ SN)  |  62.27  |   
+| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou_st3d/secondiou_st3d++_ros_car.yaml) |     ST3D++     |  66.01  |  
+| [SECOND-IoU](tools/cfgs/da-nuscenes-kitti_models/secondiou_st3d/secondiou_st3d++_sn_car.yaml)  | ST3D++ (w/ SN) |  66.24  |  
+| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_old_anchor.yaml)                   |  Source Only   |  37.17  |  
+| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_old_anchor_ros.yaml)               |      ROS       |  38.84  |    
+| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_old_anchor_sn.yaml)                |       SN       |  49.47  |   
+| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn_st3d/pvrcnn_st3d.yaml)                    |      ST3D      |  71.11  |    
+| [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn_st3d/pvrcnn_st3d.yaml)                    |  ST3D (w/ SN)  |  73.16  |   
 | [PV-RCNN](tools/cfgs/da-nuscenes-kitti_models/pvrcnn/pvrcnn_car_gt.yaml) | Tuned Anchor (Our) | 54.72
-| [PointRCNN](tools/cfgs/da-nuscenes-kitti_models/pointrcnn/pointrcnn.yaml)                      |      ROS       |  55.92  |    -    |    -    |
-| [PointRCNN](tools/cfgs/da-nuscenes-kitti_models/pointrcnn_st3d/pointrcnn_st3d++_car.yaml)      |    ST3D++      |  67.51  |    -    |    -    |
+| [PointRCNN](tools/cfgs/da-nuscenes-kitti_models/pointrcnn/pointrcnn.yaml)                      |      ROS       |  55.92  |    
+| [PointRCNN](tools/cfgs/da-nuscenes-kitti_models/pointrcnn_st3d/pointrcnn_st3d++_car.yaml)      |    ST3D++      |  67.51  |  
 
 ### Waymo -> nuScenes TASK
 |                                             | method | Car@R11 | Car@R40 | download | 
