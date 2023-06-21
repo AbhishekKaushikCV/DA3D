@@ -1,8 +1,8 @@
 #!/bin/bash -l
 
 # Slurm parameters
-#SBATCH --job-name=test
-#SBATCH --output=test_nus_pvrcnnld_waymo_tunedanchor_%j.%N.out
+#SBATCH --job-name=testn
+#SBATCH --output=test_nus_votrvorcnn_tunedanchor1_%j.%N.out
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=168:00:00
@@ -24,6 +24,7 @@ CUDA_VISIBLE_DEVICES=0
 #--ckpt  /no_backups/s1435/DA3D/checkpoints/votrtsd_car_checkpoint_epoch_60.pth \
 #--extra_tag  test_nus_votrtsd_waymo[4.6,1.9,1.7]
 
+# python test.py  --cfg_file cfgs/da-waymo-nus_models/second/second_car_gt_intensity.yaml --ckpt /no_backups/s1435/DA3D/output/da-waymo-kitti_models/second/second_car_gt_intensity/train_secondgt_car_intensity_waymo/ckpt/checkpoint_epoch_30.pth --extra_tag testnus_secondgtintensity_trainedanchor
 
 #python test.py \
 #--cfg_file  cfgs/da-waymo-kitti_models/pvrcnn/pvrcnn_car_gt.yaml \
@@ -39,10 +40,9 @@ CUDA_VISIBLE_DEVICES=0
 
 
 python test.py \
---cfg_file  cfgs/da-waymo-kitti_models/pvrcnn/pvrcnn_car_ld.yaml \
---ckpt  /no_backups/s1435/DA3D/checkpoints/pvrcnn_car_ld_checkpoint_epoch_30.pth \
---extra_tag  test_kitti_pvrcnnld_waymo_tunedanchor \
---set DATA_CONFIG_TAR.FOV_POINTS_ONLY True
+--cfg_file  cfgs/da-waymo-nus_models/votr/votr_tsd_vorcnn_head_car.yaml \
+--ckpt  /no_backups/s1435/DA3D/checkpoints/votrvorcnn_car_checkpoint_epoch_80.pth \
+--extra_tag  test_nus_votrvorcnn_tunedanchor1
 
 
 

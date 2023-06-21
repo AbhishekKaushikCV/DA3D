@@ -13,7 +13,7 @@ except:
     from visual_utils import visualize_utils as V
 
     OPEN3D_FLAG = False
-
+print(OPEN3D_FLAG)
 import numpy as np
 import torch
 
@@ -86,10 +86,12 @@ def main():
             # print(pred_dicts[0]['pred_boxes'].size())
             gt_boxes = data_dict['gt_boxes']
             gt_boxes = gt_boxes.squeeze(dim=0)
-
+            # Assuming you have a point cloud 'points' and want to change the color to red
+            #point_colors = np.ones((data_dict['points'].shape[0], 3))  # Initialize with white color
+            #point_colors[:, 0] = 1  # Set red channel to 1, green and blue channels remain 1
             V.draw_scenes(
                 points=data_dict['points'][:, 1:], gt_boxes=gt_boxes, ref_boxes=pred_dicts[0]['pred_boxes'],
-                ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels']
+                ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels'],
             )
 
             if not OPEN3D_FLAG:

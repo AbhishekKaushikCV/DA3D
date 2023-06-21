@@ -10,11 +10,17 @@ import numpy as np
 
 box_colormap = [
     [1, 1, 1],
+    [1, 0, 0],
     [0, 1, 0],
-    [0, 1, 1],
-    [1, 1, 0],
+    [0, 0, 1],
 ]
-
+# original:
+# box_colormap = [
+#     [1, 1, 1],
+#     [0, 1, 0],
+#     [0, 1, 1],
+#     [1, 1, 0],
+# ]
 
 def get_coor_colors(obj_labels):
     """
@@ -45,9 +51,10 @@ def draw_scenes(points, gt_boxes=None, ref_boxes=None, ref_labels=None, ref_scor
 
     vis = open3d.visualization.Visualizer()
     vis.create_window()
-
-    vis.get_render_option().point_size = 1.0
-    vis.get_render_option().background_color = np.zeros(3)
+    # change the point size and the background color
+    vis.get_render_option().point_size = 2.0
+    # white background
+    vis.get_render_option().background_color = np.array([1, 1, 1])
 
     # draw origin
     if draw_origin:
@@ -58,8 +65,10 @@ def draw_scenes(points, gt_boxes=None, ref_boxes=None, ref_labels=None, ref_scor
     pts.points = open3d.utility.Vector3dVector(points[:, :3])
 
     vis.add_geometry(pts)
+    # color the points
     if point_colors is None:
-        pts.colors = open3d.utility.Vector3dVector(np.ones((points.shape[0], 3)))
+        pts.colors = open3d.utility.Vector3dVector(np.ones((points.shape[0], 3)) * [0.5, 0.5, 0.5])
+
     else:
         pts.colors = open3d.utility.Vector3dVector(point_colors)
 
@@ -91,6 +100,7 @@ def translate_boxes_to_open3d_instance(gt_boxes):
 
     line_set = open3d.geometry.LineSet.create_from_oriented_bounding_box(box3d)
 
+
     # import ipdb; ipdb.set_trace(context=20)
     lines = np.asarray(line_set.lines)
     lines = np.concatenate([lines, np.array([[1, 4], [7, 6]])], axis=0)
@@ -99,8 +109,8 @@ def translate_boxes_to_open3d_instance(gt_boxes):
 
     return line_set, box3d
 
-
-def draw_box(vis, gt_boxes, color=(0, 1, 0), ref_labels=None, score=None):
+# previous color=(0,1,0)
+def draw_box(vis, gt_boxes, color=(1, 1, 1), ref_labels=None, score=None):
     for i in range(gt_boxes.shape[0]):
         line_set, box3d = translate_boxes_to_open3d_instance(gt_boxes[i])
         if ref_labels is None:
