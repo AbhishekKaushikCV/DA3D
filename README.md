@@ -65,7 +65,7 @@ Please refer to [DEMO.md](docs/DEMO.md), for visualization of detections, and po
 
 ## Sample Detection Visualization
 <p align="center">
-  <img src="demo.png" width="99%">
+  <img src="docs/demo.png" width="99%">
 </p>
 
 ## Acknowledgement
